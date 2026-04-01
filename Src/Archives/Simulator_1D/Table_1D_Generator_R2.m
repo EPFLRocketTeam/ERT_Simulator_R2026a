@@ -31,7 +31,7 @@ Option = odeset('Events', @myEvent);
 [t,x] = Sim_1D(Rocket, Environment, tspan, x0, drag_func, theta_AB(1),...
     'Velocity', 0, -1);
 % get altitude and time value for beginning of burn phase
-H_initial = interp1(t, x(:,1), Rocket.Burn_Time, 'linear');
+H_initial = interp1(t, x(:,1), Rocket.burnTime, 'linear');
 V_rail = interp1(x(:,1), x(:,2), x_rail, 'linear');
 display(['Velocity off rail: ' num2str(V_rail) ' m/s']);
 

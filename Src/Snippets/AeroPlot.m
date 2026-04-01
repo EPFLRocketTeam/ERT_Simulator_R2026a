@@ -73,7 +73,7 @@ set(gca, 'Fontsize', 16);
 
 % 3.1 Stability Margin
 figure; hold on;
-plot(rad2deg(alpha), (XCP-Rocket.rocket_cm)/Rocket.dm, 'LineWidth', 2);
+plot(rad2deg(alpha), (XCP-Rocket.emptyCenterOfMass)/Rocket.dm, 'LineWidth', 2);
 grid on;
 title 'Stability margin'; 
 xlabel '\alpha [°]'; ylabel '(X_{cp} - X_{cm})/d_m [-]';

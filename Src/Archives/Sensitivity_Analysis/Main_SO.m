@@ -1,4 +1,4 @@
-%% Main_SO.m - Frédéric Berdoz - October 2020 
+%% Main_SO.m - FrÃ©dÃ©ric Berdoz - October 2020 
 %
 % Main runabale script for the Sobol analysis applied to the ERT
 % simulator.
@@ -24,17 +24,17 @@ ONLYDLR = true;
 
 % missing fin_n, ab_n and lug_n.
 Xid = [ "dmin" "dd" "z1" "z12" "z23" "fin_xt" "fin_s" "fin_cr" "fin_ct" "fin_xs" ...
-         "fin_t" "lug_S" "rocket_m" "rocket_I" "rocket_cm" "ab_x" "ab_phi" ... 
+         "fin_t" "lug_S" "emptyMass" "rocket_I" "emptyCenterOfMass" "ab_x" "ab_phi" ... 
          "pl_mass" "para_main_SCD" "para_drogue_SCD" "para_main_event" "intermotor_d" "motor_diaP" ...
          "motor_lengthP" "propel_massP" "motor_massP" "motor_diaF" "motor_lengthF" "propel_massF" ...
-         "motor_massF" "Burn_Time" "T1" "T2" "Temperature_Ground" "Pressure_Ground" "Humidity_Ground"  ... 
+         "motor_massF" "burnTime" "T1" "T2" "Temperature_Ground" "Pressure_Ground" "Humidity_Ground"  ... 
          "Start_Altitude" "dTdh" "Rail_Length" "Rail_Angle" "Rail_Azimuth"...
          "Vi1" "Vi2" "Vi3" "Vi4" "Vi5" "Vi6" "ai1" "ai2" "ai3" "ai4" "ai5" "ai6"]';
     
 
 
 %Less inputs for debugging
-%Xid = ["fin_xt" "fin_s" "fin_cr" "fin_ct" "fin_xs" "fin_t" "Burn_Time" "T1"]; 
+%Xid = ["fin_xt" "fin_s" "fin_cr" "fin_ct" "fin_xs" "fin_t" "burnTime" "T1"]; 
 
 Yid = ["Veor" "apogee" "t@apogee" "Vmax" "Vmax@t" "Cdmax" "a_max" "margin_min" "CNa_min" "MarCNa_min" "MarCNa_av" "landing_azi" "landing_drift"];
 

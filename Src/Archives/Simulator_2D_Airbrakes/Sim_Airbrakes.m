@@ -9,7 +9,7 @@ function [T2,X2, ab_control] = Sim_Airbrakes(Rocket, Environment, AB_drag, AB_ta
     %--------------------------------------------------------------------------
     % Initial Conditions
     x_0 = [0;0]; % At rest position
-    tspan = [0 double(Rocket.Burn_Time)];
+    tspan = [0 double(Rocket.burnTime)];
 
     % Simulation
     Option = odeset('Events', @myEventRail);
@@ -166,7 +166,7 @@ function [T2,X2, ab_control] = Sim_Airbrakes(Rocket, Environment, AB_drag, AB_ta
         
         if isempty(flag)
             
-           if(t(end)>Rocket.Burn_Time && control_flag)
+           if(t(end)>Rocket.burnTime && control_flag)
                
               h_current = x(3, end); v_current = x(4, end); 
               h_tab_up = h_tab(find(h_tab>h_current, 1, 'first'), 1);

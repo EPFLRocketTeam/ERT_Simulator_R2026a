@@ -37,7 +37,7 @@ for i=1:length(windSpace)
         % 6DOF Flight Simulation
         %--------------------------------------------------------------------------
 
-         [T2, S2, T21, S21, I2_1E] = SimObj.FlightSim([T1(end) SimObj.Rocket.Burn_Time(end)], S1(end, 2));
+         [T2, S2, T21, S21, I2_1E] = SimObj.FlightSim([T1(end) SimObj.Rocket.burnTime(end)], S1(end, 2));
 
         apogee_rec(i,j) = S2(end, 3);
 

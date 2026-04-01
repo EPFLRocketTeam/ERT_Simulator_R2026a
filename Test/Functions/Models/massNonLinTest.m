@@ -13,13 +13,13 @@ classdef massNonLinTest < matlab.unittest.TestCase
 
         function testNonLinear_nonHybrid_midBurn(testCase)
             R = rocketNonHybrid();
-            t = R.Burn_Time/2;
+            t = R.burnTime/2;
 
             [M,dMdt] = massNonLin(t,R);
 
             tt = linspace(0,t,500);
             Current_Impulse = trapz(tt,Thrust(tt,R));
-            exp_M = R.rocket_m + R.motor_mass - R.Thrust2dMass_Ratio*Current_Impulse;
+            exp_M = R.emptyMass + R.motor_mass - R.Thrust2dMass_Ratio*Current_Impulse;
             exp_dMdt = R.Thrust2dMass_Ratio*Thrust(t,R);
 
             testCase.verifyEqual(dMdt,exp_dMdt,'AbsTol',testCase.AbsTol);
@@ -29,11 +29,11 @@ classdef massNonLinTest < matlab.unittest.TestCase
 
         function testNonLinear_nonHybrid_afterBurn(testCase)
             R = rocketNonHybrid();
-            t = R.Burn_Time + 1;
+            t = R.burnTime + 1;
 
             [M,dMdt] = massNonLin(t,R);
 
-            exp_M = R.rocket_m + R.motor_mass - R.propel_mass;
+            exp_M = R.emptyMass + R.motor_mass - R.propelMass;
 
             testCase.verifyEqual(M,exp_M,'AbsTol',testCase.AbsTol);
             testCase.verifyEqual(dMdt,0,'AbsTol',testCase.AbsTol);
@@ -46,11 +46,11 @@ classdef massNonLinTest < matlab.unittest.TestCase
 
         function testNonLinear_hybrid_afterBurn(testCase)
             R = rocketHybrid();
-            t = R.Burn_Time + 1;
+            t = R.burnTime + 1;
 
             [M,dMdt] = massNonLin(t,R,'NonLinear');
 
-            exp_M = R.rocket_m + R.casing_mass;
+            exp_M = R.emptyMass + R.casing_mass;
 
             testCase.verifyEqual(M,exp_M,'AbsTol',testCase.AbsTol);
             testCase.verifyEqual(dMdt,0,'AbsTol',testCase.AbsTol);
@@ -63,7 +63,7 @@ classdef massNonLinTest < matlab.unittest.TestCase
 
         function testMass(testCase)
             R = rocketNonHybrid();
-            t = linspace(0, R.Burn_Time, 1000);
+            t = linspace(0, R.burnTime, 1000);
             [M,dMdt,~,~,~,~,~,~] = massNonLin(t,R,'NonLinear');
             testCase.verifyGreaterThanOrEqual(M,0);
             testCase.verifyLessThanOrEqual(dMdt,0);
@@ -79,12 +79,12 @@ end
 
 function R = rocketNonHybrid()
     R.isHybrid = 0;
-    R.propel_mass = 10;
-    R.Burn_Time = 5;
-    R.rocket_m = 50;
+    R.propelMass = 10;
+    R.burnTime = 5;
+    R.emptyMass = 50;
     R.motor_mass = 20;
     R.casing_mass = 5;
-    R.rocket_cm = 1.0;
+    R.emptyCenterOfMass = 1.0;
     R.motor_length = 0.4;
     R.motor_dia = 0.12;
     R.L = 2.5;
@@ -94,12 +94,12 @@ end
 
 function R = rocketHybrid()
     R.isHybrid = 1;
-    R.propel_mass = 8;
-    R.Burn_Time = 6;
-    R.rocket_m = 55;
+    R.propelMass = 8;
+    R.burnTime = 6;
+    R.emptyMass = 55;
     R.casing_mass = 4;
     R.motor_mass = 18;
-    R.rocket_cm = 1.0;
+    R.emptyCenterOfMass = 1.0;
     R.motor_length = 0.45;
     R.motor_lengthP = 0.25;
     R.motor_lengthF = 0.15;
@@ -119,8 +119,8 @@ end
 %% ========================================================================
 function y = Thrust(t, Rocket)
     % Deterministic thrust curve:  simply T = 1000*N*sin(t)
-    if t<Rocket.Burn_Time
-        y = 1000*sin(pi*t/Rocket.Burn_Time);
+    if t<Rocket.burnTime
+        y = 1000*sin(pi*t/Rocket.burnTime);
     else
         y=0;
     end

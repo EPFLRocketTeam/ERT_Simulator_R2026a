@@ -15,7 +15,7 @@ for i = 1 : n_sim
     end
     SimObj = multilayerwindSimulator3D(Rocket, Environment, SimOutputs);
     [T1, S1] = SimObj.RailSim();
-    [T2_1, S2_1, ~, ~, ~] = SimObj.FlightSim([T1(end) SimObj.Rocket.Burn_Time(end)], S1(end, 2));
+    [T2_1, S2_1, ~, ~, ~] = SimObj.FlightSim([T1(end) SimObj.Rocket.burnTime(end)], S1(end, 2));
     [T2_2, S2_2, ~, ~, ~] = SimObj.FlightSim([T2_1(end) 40], S2_1(end, 1:3)', S2_1(end, 4:6)', S2_1(end, 7:10)', S2_1(end, 11:13)');
     T2 = [T2_1; T2_2(2:end)];
     S2 = [S2_1; S2_2(2:end, :)];

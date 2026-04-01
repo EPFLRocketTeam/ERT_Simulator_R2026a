@@ -35,7 +35,7 @@ parfor idx_sim = 1:N
     
     if any(ismember(Yid, Yimp_apogee)) || any(ismember(Yid, Yimp_landing))
         % Thrust phase
-        [T2_1, S2_1, ~, ~, ~] = SimObj_i.FlightSim([T1(end) SimObj_i.Rocket.Burn_Time(end)], S1(end, 2));
+        [T2_1, S2_1, ~, ~, ~] = SimObj_i.FlightSim([T1(end) SimObj_i.Rocket.burnTime(end)], S1(end, 2));
         
         % Ballistic phase
         [T2_2, S2_2, ~, ~, ~] = SimObj_i.FlightSim([T2_1(end) 40], S2_1(end, 1:3)', S2_1(end, 4:6)', S2_1(end, 7:10)', S2_1(end, 11:13)');

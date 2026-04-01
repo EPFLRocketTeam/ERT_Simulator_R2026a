@@ -154,7 +154,7 @@ classdef Simulator3D < handle
             % Inertia using the given I_rocket and the motor
             % Compute I_motor (approximate by a cylinder)
             motor_inertia = inertia_fill_cylinder(M, ...
-                obj.Rocket.motor_length, obj.Rocket.motor_dia / 2);
+                obj.Rocket.motorLength, obj.Rocket.motor_dia / 2);
             % Total inertia
             %I = inertial_matrix(obj.Rocket, Cm, t);
             %disp(I)
@@ -164,7 +164,7 @@ classdef Simulator3D < handle
             I = C' * I * C; % Transfert to earth coordinates
 
             % Temporal derivative of inertial matrix
-            dIdt = inertia_fill_cylinder(dMdt, obj.Rocket.motor_length, ...
+            dIdt = inertia_fill_cylinder(dMdt, obj.Rocket.motorLength, ...
                 obj.Rocket.motor_dia / 2); % Inertial matrix time derivative
             dIdt = C' * dIdt * C; % Transfert to earth coordinates
 
@@ -237,7 +237,7 @@ classdef Simulator3D < handle
             % Drag
             % Drag coefficient
             CD = drag(obj.Rocket, alpha, Vmag, nu, a)*obj.Rocket.CD_fac; 
-            if(t>obj.Rocket.Burn_Time)
+            if(t>obj.Rocket.burnTime)
               CD = CD + drag_shuriken(obj.Rocket, obj.Rocket.ab_phi, alpha, Vmag, nu); 
             end
             % Drag force
@@ -348,7 +348,7 @@ classdef Simulator3D < handle
             [~, a, ~, rho, nu] = atmosphere(X(3)+Environment.Start_Altitude, Environment);
 
             % mass
-            M = Rocket.rocket_m;
+            M = Rocket.emptyMass;
 
             V_rel = V -...
                  ... % Wind as computed by windmodel
@@ -389,7 +389,7 @@ classdef Simulator3D < handle
             [~, a, ~, rho, nu] = atmosphere(X(3)+Environment.Start_Altitude, Environment);
 
             % mass
-            M = Rocket.rocket_m;
+            M = Rocket.emptyMass;
 
             V_rel = V -...
                  ... % Wind as computed by windmodel
@@ -450,13 +450,13 @@ classdef Simulator3D < handle
             % Inertia using the given I_rocket and the motor
             % Compute I_motor (approximate by a cylinder)
             motor_inertia = inertia_fill_cylinder(M, ...
-                obj.Rocket.motor_length, obj.Rocket.motor_dia / 2);
+                obj.Rocket.motorLength, obj.Rocket.motor_dia / 2);
             % Total inertia
             I = obj.Rocket.rocket_inertia + motor_inertia;
             I = C' * I * C; % Transfert to earth coordinates
 
             % Temporal derivative of inertial matrix
-            dIdt = inertia_fill_cylinder(dMdt, obj.Rocket.motor_length, ...
+            dIdt = inertia_fill_cylinder(dMdt, obj.Rocket.motorLength, ...
                 obj.Rocket.motor_dia / 2); % Inertial matrix time derivative
             dIdt = C' * dIdt * C; % Transfert to earth coordinates
 
@@ -528,7 +528,7 @@ classdef Simulator3D < handle
             % Drag
             % Drag coefficient
             CD = Nose_drag(obj.Rocket, alpha, Vmag, nu, a)*obj.Rocket.CD_fac; 
-            if(t>obj.Rocket.Burn_Time)
+            if(t>obj.Rocket.burnTime)
               CD = CD + drag_shuriken(obj.Rocket, obj.Rocket.ab_phi, alpha, Vmag, nu); 
             end
             % Drag force
@@ -696,7 +696,7 @@ classdef Simulator3D < handle
             S0 = [X0; V0];
 
             % empty mass
-            M = obj.Rocket.rocket_m - obj.Rocket.pl_mass;
+            M = obj.Rocket.emptyMass - obj.Rocket.pl_mass;
 
             % time span
             tspan = [T0, 5000];
@@ -718,7 +718,7 @@ classdef Simulator3D < handle
             S0 = [X0; V0];
 
             % empty mass
-            M = obj.Rocket.rocket_m - obj.Rocket.pl_mass;
+            M = obj.Rocket.emptyMass - obj.Rocket.pl_mass;
 
             % time span
             tspan = [T0, 5000];

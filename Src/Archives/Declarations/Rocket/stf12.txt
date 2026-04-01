@@ -10,9 +10,9 @@ fin_xs 0.107
 fin_t 0.004
 lug_n 2
 lug_S 1.81e-4
-rocket_m 22.27		//mass of empty rocket without tank and combustion chamber + mass of ABS that isn't used
+emptyMass 22.27		//mass of empty rocket without tank and combustion chamber + mass of ABS that isn't used
 rocket_I 39
-rocket_cm 1.58
+emptyCenterOfMass 1.58
 ab_x 314
 ab_n 0
 ab_phi 0.0

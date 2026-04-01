@@ -63,7 +63,7 @@ display(['Launch rail departure time : ' num2str(T1(end))]);
 % 6DOF Flight Simulation
 %--------------------------------------------------------------------------
 
-[T2_1, S2_1, T2_1E, S2_1E, I2_1E] = SimObj.FlightSim([T1(end) SimObj.Rocket.Burn_Time(end)], S1(end, 2));
+[T2_1, S2_1, T2_1E, S2_1E, I2_1E] = SimObj.FlightSim([T1(end) SimObj.Rocket.burnTime(end)], S1(end, 2));
 
 %SimObj.Rocket.cone_mode = 'off';
 

@@ -58,7 +58,7 @@ for v = 0:2:6
     % 2D_USA
     % Initial Conditions
     x_0 = [0;0]; % At rest position
-    tspan = [0 Rocket_USA.Burn_Time];
+    tspan = [0 Rocket_USA.burnTime];
 
     % Simulation
     Option = odeset('Events', @myEventRail);
@@ -78,7 +78,7 @@ for v = 0:2:6
     % 2D_Payerne
     % Initial Conditions
     x_0 = [0;0]; % At rest position
-    tspan = [0 Rocket_Payerne.Burn_Time];
+    tspan = [0 Rocket_Payerne.burnTime];
 
     % Simulation
     Option = odeset('Events', @myEventRail);

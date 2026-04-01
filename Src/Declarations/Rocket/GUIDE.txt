@@ -11,13 +11,13 @@ fin_xs : distance entre le début de ct et cr selon l'axe z
 fin_t : epaisseur des ailerons (j'ai un shépa si jamais si c'est pas clair pour les ailerons)
 lug_n : nombre de lunch lugs
 lug_S : surface de référence d'un lunch lugs
-rocket_m : masse de la fusée sans moteur
+emptyMass : masse de la fusée sans moteur
 rocket_I : inertie selon l'axe x et y de la fusée sans moteur
-rocket_cm : centre de masse de la fusée sans moteur
+emptyCenterOfMass : centre de masse de la fusée sans moteur
 ab_x : distance airbrakes-nez de la fusée
 ab_n : nomre d'airbrakes
 ab_phi : angle de déploiement des airbrakes
-pl_mass : masse de la payload ( il faut quand meme conter la payload dans rocket_m)
+pl_mass : masse de la payload ( il faut quand meme conter la payload dans emptyMass)
 para_main_SCD: surface de référence du main parachute *coef de frottement
 para_drogue_SCD surface de référence du drogue parachute*coef de frottement
 para_main_event: altitude à laquelle se déploie le main parachute

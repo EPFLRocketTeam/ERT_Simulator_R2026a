@@ -4,7 +4,7 @@
 % C_N_alpha_F = 10.5
 % V0 = S1(end)
 % Defaults from 2019_SI_OR_0007_QR_OPEN_ROCKET_SIMULATION_R01 :
-% rocket_m = 23.093
+% emptyMass = 23.093
 % rocket_I = 29.977 (from 2*36.57-[~,~,~,I] = RocketInertia(0,Rocket,1))
 % 36.57 is OR value. The above computes the empty rocket's inertia.
 %
@@ -15,9 +15,9 @@
 % Change rho to 0.896 (=0.95*0.943)
 % Change C_N_alpha_F to 9.45 (=0.9*10.5)
 % Change rocket_I to 31.4795 (=29.977*1.05)
-% Change rocket_cm to 1.8244
+% Change emptyCenterOfMass to 1.8244
 % Value obtained by solving (23.093*x + 8.3420*2.679)/31 = 2.08 for x
-% 23.093 is rocket_m
+% 23.093 is emptyMass
 % 8.3420 is motor_mass
 % 2.6790 is the distance of the motor's CM from the rocket's CP
 % 31 is the rocket's mass off the rail
@@ -43,7 +43,7 @@ close all
 acc = diff(S2(:,6))./diff(T2);
 display(['Acceleration off rail : ' num2str(acc(1))]);
 display(['Time off rail : ' num2str(T1(end))]);
-display(['Fuel burn off rail : ' num2str(Rocket.motor_mass+Rocket.rocket_m-SimObj.SimAuxResults.Mass(1))]);
+display(['Fuel burn off rail : ' num2str(Rocket.motor_mass+Rocket.emptyMass-SimObj.SimAuxResults.Mass(1))]);
 display(['Inertia off rail : ' num2str(SimObj.SimAuxResults.Il(1))]);
 display(['Max speed AGL : ' num2str(S2(index,3))]);
 

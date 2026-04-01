@@ -211,7 +211,7 @@ classdef multilayerwindSimulator3D_ode45 < handle
             % Drag
             % Drag coefficient
             CD = drag(obj.Rocket, alpha, Vmag, nu, a)*obj.Rocket.CD_fac; 
-            if(t>obj.Rocket.Burn_Time)
+            if(t>obj.Rocket.burnTime)
               CD = CD + drag_shuriken(obj.Rocket, obj.Rocket.ab_phi, alpha, Vmag, nu); 
             end
             % Drag force
@@ -319,7 +319,7 @@ classdef multilayerwindSimulator3D_ode45 < handle
             [~, a, ~, rho, nu] = stdAtmos(X(3)+Environment.Start_Altitude, Environment);
 
             % mass
-            M = Rocket.rocket_m;
+            M = Rocket.emptyMass;
             alt = min(400, max(1,round(X(3)/10)));
             V_inf = Environment.Vspeed(alt)*[Environment.Vdirx(alt);Environment.Vdiry(alt);Environment.Vdirz(alt)];
             V_rel = V -...
@@ -448,7 +448,7 @@ classdef multilayerwindSimulator3D_ode45 < handle
             % Drag
             % Drag coefficient
             CD = Nose_drag(obj.Rocket, alpha, Vmag, nu, a)*obj.Rocket.CD_fac; 
-            if(t>obj.Rocket.Burn_Time)
+            if(t>obj.Rocket.burnTime)
               CD = CD + drag_shuriken(obj.Rocket, obj.Rocket.ab_phi, alpha, Vmag, nu); 
             end
             % Drag force
@@ -574,7 +574,7 @@ classdef multilayerwindSimulator3D_ode45 < handle
             S0 = [X0; V0];
 
             % empty mass
-            M = obj.Rocket.rocket_m - obj.Rocket.pl_mass;
+            M = obj.Rocket.emptyMass - obj.Rocket.pl_mass;
 
             % time span
             tspan = [T0, 500];
@@ -596,7 +596,7 @@ classdef multilayerwindSimulator3D_ode45 < handle
             S0 = [X0; V0];
 
             % empty mass
-            M = obj.Rocket.rocket_m - obj.Rocket.pl_mass;
+            M = obj.Rocket.emptyMass - obj.Rocket.pl_mass;
 
             % time span
             tspan = [T0, 500];

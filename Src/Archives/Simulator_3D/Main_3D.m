@@ -26,7 +26,7 @@ display(['Launch rail departure time : ' num2str(T1(end))]);
 % 6DOF Flight Simulation
 %--------------------------------------------------------------------------
 
-[T2_1, S2_1, T2_1E, S2_1E, I2_1E] = SimObj.FlightSim([T1(end) SimObj.Rocket.Burn_Time(end)], S1(end, 2));
+[T2_1, S2_1, T2_1E, S2_1E, I2_1E] = SimObj.FlightSim([T1(end) SimObj.Rocket.burnTime(end)], S1(end, 2));
 
 %SimObj.Rocket.cone_mode = 'off';
 
@@ -183,25 +183,25 @@ figure('Name','Aerodynamic properties'); hold on;
 subplot(3,2,1);
 plot(T2, SimObj.SimAuxResults.Margin)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title 'Margin';
 % Plot Xcp
 subplot(3,2,2);
 plot(T2, SimObj.SimAuxResults.Xcp)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title 'X_{cp}';
 % Plot AoA vs. time
 subplot(3,2,3);
 plot(T2, SimObj.SimAuxResults.Alpha)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title '\alpha';
 % Plot CNa vs. speed
 subplot(3,2,4);
 plot(T2, SimObj.SimAuxResults.Cn_alpha)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title 'Cn_{\alpha}';
 
 subplot(3,2,5);
@@ -217,7 +217,7 @@ ylim([0, 1]);
 tmpYlim = ylim;
 set(gca, 'YTick', tmpYlim(1):0.1:tmpYlim(2));
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title 'Delta, angle with Oz'
 screensize = get( groot, 'Screensize' );
 set(gcf,'Position',[screensize(1:2), screensize(3)*0.5,screensize(4)]);
@@ -257,12 +257,12 @@ figure('Name','Mass properties'); hold on;
 subplot(2,2,1);
 plot(T2, SimObj.SimAuxResults.Mass)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 tmpYlim = ylim;
 title 'Mass';
 set(gca, 'YTick', tmpYlim(1):0.5:tmpYlim(2));
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 % Plot CM vs. time
 subplot(2,2,2);
 plot(T2, SimObj.SimAuxResults.CM)
@@ -270,7 +270,7 @@ tmpYlim = ylim;
 title 'CM';
 set(gca, 'YTick', tmpYlim(1):0.01:tmpYlim(2));
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 % Plot Il vs. time
 subplot(2,2,3);
 plot(T2, SimObj.SimAuxResults.Il)
@@ -278,13 +278,13 @@ tmpYlim = ylim;
 title 'Il';
 set(gca, 'YTick', tmpYlim(1):0.1:tmpYlim(2));
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 %Plot Ir vs. time
 subplot(2,2,4);
 plot(T2, SimObj.SimAuxResults.Ir)
 title 'Ir';
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 screensize = get( groot, 'Screensize' );
 set(gcf,'Position',[screensize(3)*0.5, screensize(2),...
     screensize(3)*0.5,screensize(3)*0.5]);            

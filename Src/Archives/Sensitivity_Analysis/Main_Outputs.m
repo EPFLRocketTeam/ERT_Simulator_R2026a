@@ -1,4 +1,4 @@
- %% Main_Outputs.m - Frédéric Berdoz - October 2020 
+ %% Main_Outputs.m - FrÃ©dÃ©ric Berdoz - October 2020 
 %
 % Main runabale script for visualizing the outpus
 % 
@@ -26,7 +26,7 @@ SimObj = multilayerwindSimulator3D(Rocket, Environment, SimOutputs);
 
 [T1, S1] = SimObj.RailSim();
 
-[T2_1, S2_1, T2_1E, S2_1E, I2_1E] = SimObj.FlightSim([T1(end) SimObj.Rocket.Burn_Time(end)], S1(end, 2));
+[T2_1, S2_1, T2_1E, S2_1E, I2_1E] = SimObj.FlightSim([T1(end) SimObj.Rocket.burnTime(end)], S1(end, 2));
 
 [T2_2, S2_2, T2_2E, S2_2E, I2_2E] = SimObj.FlightSim([T2_1(end) 40], S2_1(end, 1:3)', S2_1(end, 4:6)', S2_1(end, 7:10)', S2_1(end, 11:13)');
 
@@ -62,7 +62,7 @@ subplot(1,2,1)
 hold on;
 title 'Stability Margin'
 xline(T2(1), '-', {'End of Rail'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'green', 'LineWidth', 1.2, 'DisplayName', 'End of Rail');
-xline(SimObj.Rocket.Burn_Time,  '-', {'End of Propulsion'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'red', 'LineWidth', 1.2, 'DisplayName', 'End of Propulsion');
+xline(SimObj.Rocket.burnTime,  '-', {'End of Propulsion'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'red', 'LineWidth', 1.2, 'DisplayName', 'End of Propulsion');
 xline(T2(end),  '-', {'Apogee'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'magenta', 'LineWidth', 1.2, 'DisplayName', 'Apogee');
 legend show;
 

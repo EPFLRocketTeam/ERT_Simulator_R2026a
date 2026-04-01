@@ -8,12 +8,12 @@ function [mass,dmassdt] = massLin(t,Rocket)
 %   - dMassdt   Rocket mass derivative over time
 
 % OUTPUT:
-if t > Rocket.Burn_Time
-    mass = Rocket.rocket_m + Rocket.casing_mass;
+if t > Rocket.burnTime
+    mass = Rocket.emptyMass + Rocket.casing_mass;
     dmassdt = 0;
 else
-    dmassdt = Rocket.propel_mass/Rocket.Burn_Time;
-    mass = Rocket.rocket_m+Rocket.motor_mass-t*dmassdt;
+    dmassdt = Rocket.propelMass/Rocket.burnTime;
+    mass = Rocket.emptyMass+Rocket.motor_mass-t*dmassdt;
 end
 end
 

@@ -226,7 +226,7 @@ classdef Simulator3D_CAN_COM < handle
             CD = drag(obj.Rocket, alpha, Vmag, nu, a)*obj.Rocket.CD_fac; 
             %obj.Rocket.ab_phi
             %obj.Rocket.ab_n
-            if(t>obj.Rocket.Burn_Time)
+            if(t>obj.Rocket.burnTime)
               CD = CD + drag_shuriken(obj.Rocket, obj.Rocket.ab_phi, alpha, Vmag, nu); 
             end
             % Drag force
@@ -343,7 +343,7 @@ classdef Simulator3D_CAN_COM < handle
             [~, a, ~, rho, nu] = stdAtmos(X(3)+Environment.Start_Altitude, Environment);
 
             % mass
-            M = Rocket.rocket_m;
+            M = Rocket.emptyMass;
 
             alt = min(400, max(1,round(X(3)/10)));	
 	        V_inf = Environment.Vspeed(alt)*[Environment.Vdirx(alt);Environment.Vdiry(alt);Environment.Vdirz(alt)];
@@ -388,7 +388,7 @@ classdef Simulator3D_CAN_COM < handle
             [~, a, ~, rho, nu] = stdAtmos(X(3)+Environment.Start_Altitude, Environment);
 
             % mass
-            M = Rocket.rocket_m;
+            M = Rocket.emptyMass;
 
             V_rel = V -...
                  ... % Wind as computed by windmodel
@@ -520,7 +520,7 @@ classdef Simulator3D_CAN_COM < handle
             % Drag
             % Drag coefficient
             CD = Nose_drag(obj.Rocket, alpha, Vmag, nu, a)*obj.Rocket.CD_fac; 
-            if(t>obj.Rocket.Burn_Time)
+            if(t>obj.Rocket.burnTime)
               CD = CD + drag_shuriken(obj.Rocket, obj.Rocket.ab_phi, alpha, Vmag, nu); 
             end
             % Drag force
@@ -687,7 +687,7 @@ classdef Simulator3D_CAN_COM < handle
             S0 = [X0; V0];
 
             % empty mass
-            M = obj.Rocket.rocket_m - obj.Rocket.pl_mass;
+            M = obj.Rocket.emptyMass - obj.Rocket.pl_mass;
 
             % time span
             tspan = [T0, 500];
@@ -709,7 +709,7 @@ classdef Simulator3D_CAN_COM < handle
             S0 = [X0; V0];
 
             % empty mass
-            M = obj.Rocket.rocket_m - obj.Rocket.pl_mass;
+            M = obj.Rocket.emptyMass - obj.Rocket.pl_mass;
 
             % time span
             tspan = [T0, 500];

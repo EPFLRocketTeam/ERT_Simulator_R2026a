@@ -103,9 +103,9 @@ while ~feof(rfid)
             Rocket.lug_S = line_data_num{1}(1);
         
         % rocket empty mass    
-        case 'rocket_m'
+        case 'emptyMass'
             line_data_num = textscan(line_data, '%f');
-            Rocket.rocket_m = line_data_num{1}(1);
+            Rocket.emptyMass = line_data_num{1}(1);
         
         % rocket empty inertia    
         case 'rocket_I'
@@ -114,9 +114,9 @@ while ~feof(rfid)
         
         % rocket center of mass for empty rocket (PL + rocket without
         % motor)
-        case 'rocket_cm'
+        case 'emptyCenterOfMass'
             line_data_num = textscan(line_data, '%f');
-            Rocket.rocket_cm = line_data_num{1}(1);
+            Rocket.emptyCenterOfMass = line_data_num{1}(1);
         
         % position of airbrakes from rocket's tip    
         case 'ab_x'

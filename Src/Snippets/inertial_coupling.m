@@ -262,7 +262,7 @@ function dXdt = DiffEq3D(t, X)
 [CNa, Xcp,CNa_bar,CP_bar] = normalLift(obj.Rocket, alpha_cm, 1.1,...
                 Mach, angle(3), 1);
 
-I = inertia_fill_cylinder(M, Rocket.motor_length, Rocket.motor_dia / 2);
+I = inertia_fill_cylinder(M, Rocket.motorLength, Rocket.motor_dia / 2);
 T = Thrust(t, obj.Rocket);
 alpha = ???
 m = M;

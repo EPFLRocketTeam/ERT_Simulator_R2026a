@@ -104,8 +104,8 @@ for i=1:k
         case "ai6"
             layerAzi(6) = X(i);
             isChanged_ai = true;
-        case "Burn_Time"
-            SimObj.Rocket.Burn_Time = X(i);
+        case "burnTime"
+            SimObj.Rocket.burnTime = X(i);
             SimObj.Rocket.Thrust_Time =  X(i) * Thrust_Time_NV;
         otherwise
             if ismember(id, rocketparamIDs)
@@ -161,13 +161,13 @@ SimObj.Rocket.casing_massP = SimObj.Rocket.motor_massP-SimObj.Rocket.propel_mass
 SimObj.Rocket.casing_massF = SimObj.Rocket.motor_massF-SimObj.Rocket.propel_massF;
 %Global motor info
 SimObj.Rocket.motor_dia = max(SimObj.Rocket.motor_diaP, SimObj.Rocket.motor_diaF);
-SimObj.Rocket.motor_length = SimObj.Rocket.motor_lengthP + SimObj.Rocket.motor_lengthF + SimObj.Rocket.intermotor_d ;
-SimObj.Rocket.propel_mass = SimObj.Rocket.propel_massP + SimObj.Rocket.propel_massF ;
+SimObj.Rocket.motorLength = SimObj.Rocket.motor_lengthP + SimObj.Rocket.motor_lengthF + SimObj.Rocket.intermotor_d ;
+SimObj.Rocket.propelMass = SimObj.Rocket.propel_massP + SimObj.Rocket.propel_massF ;
 SimObj.Rocket.motor_mass = SimObj.Rocket.motor_massP + SimObj.Rocket.motor_massF; 
 SimObj.Rocket.casing_mass = SimObj.Rocket.casing_massP + SimObj.Rocket.casing_massF ;
 % Mass variation coefficient
 A_T = trapz(SimObj.Rocket.Thrust_Time, SimObj.Rocket.Thrust_Force);
-SimObj.Rocket.Thrust2dMass_Ratio = SimObj.Rocket.propel_mass/(A_T);
+SimObj.Rocket.Thrust2dMass_Ratio = SimObj.Rocket.propelMass/(A_T);
 
 
 end

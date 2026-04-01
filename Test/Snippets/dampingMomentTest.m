@@ -14,7 +14,7 @@ end
 function rocket = buildRocket()
     rocket.Sm        = 0.02;   % Reference area [m^2]
     Rocket.length         = 3.0;    % Total rocket length [m]
-    rocket.Burn_Time = 5.0;
+    rocket.burnTime = 5.0;
 end
  
 function env = buildEnvironnement()
@@ -64,11 +64,11 @@ end
 %--------------------------------------------------------------------------
 function test_AeroDampingLinearInVelocity(testCase)
     rocket           = buildRocket();
-    rocket.Burn_Time = 0;   % Immediately past burnout → dMdt = 0
+    rocket.burnTime = 0;   % Immediately past burnout → dMdt = 0
     env              = buildEnvironnement();
     cAlpha           = [6.0];
     cp               = [2.3];
-    tPostburn        = rocket.Burn_Time + 1;   % ensure post-burnout
+    tPostburn        = rocket.burnTime + 1;   % ensure post-burnout
  
     c2V1 = dampingMoment(tPostburn, rocket, cAlpha, cp, 100, env, 0);
     c2V2 = dampingMoment(tPostburn, rocket, cAlpha, cp, 200, env, 0);
@@ -139,7 +139,7 @@ end
 %--------------------------------------------------------------------------
 function test_MultipleFinsSumCorrectly(testCase)
     rocket           = buildRocket();
-    rocket.Burn_Time = 0;
+    rocket.burnTime = 0;
     env              = buildEnvironnement();
     cpVal            = 2.5;
     cAlphaVal        = 3.0;

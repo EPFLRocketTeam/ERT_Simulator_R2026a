@@ -10,9 +10,9 @@ fin_xs 0.08
 fin_t 0.003
 lug_n 2
 lug_S 1.61e-4
-rocket_m 22.75
+emptyMass 22.75
 rocket_I 13
-rocket_cm 1.45
+emptyCenterOfMass 1.45
 ab_x 2.05
 ab_n 3
 ab_phi -216

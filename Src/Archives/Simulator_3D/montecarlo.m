@@ -21,7 +21,7 @@ param_mean = [1];
 param_std  = [0.1];
 
 % param_struct = {'Rocket'};
-% param_name = {'rocket_m'};
+% param_name = {'emptyMass'};
 % param_mean = [17.9];
 % param_std  = [2];
 

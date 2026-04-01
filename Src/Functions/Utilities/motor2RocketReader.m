@@ -6,11 +6,11 @@ if( Rocket.isHybrid == 0)
 
 % motor info
 Rocket.motor_dia = Info{2}/1000;
-Rocket.motor_length = Info{3}/1000;
+Rocket.motorLength = Info{3}/1000;
 Rocket.motor_delay = Info{4}{1};
-Rocket.propel_mass = Info{5};
+Rocket.propelMass = Info{5};
 Rocket.motor_mass = Info{6};
-Rocket.casing_mass = Rocket.motor_mass-Rocket.propel_mass;
+Rocket.casing_mass = Rocket.motor_mass-Rocket.propelMass;
 
 % thrust lookup table
 if time(1)>0
@@ -23,11 +23,11 @@ Rocket.Thrust_Time = time;
 Rocket.Thrust_Force = Thrust;
 
 % Burn time
-Rocket.Burn_Time = time(end);
+Rocket.burnTime = time(end);
 
 % Mass variation coefficient
 A_T = trapz(time,Thrust);
-Rocket.Thrust2dMass_Ratio = Rocket.propel_mass/A_T;
+Rocket.Thrust2dMass_Ratio = Rocket.propelMass/A_T;
 else
     
 [time, ThrustP, InfoP] = motorReader(motorFilePath);
@@ -52,9 +52,9 @@ Rocket.casing_massF = Rocket.motor_massF-Rocket.propel_massF;
 
 %Global info
 Rocket.motor_dia = max(Rocket.motor_diaP, Rocket.motor_diaF);
-Rocket.motor_length = Rocket.motor_lengthP + Rocket.motor_lengthF + Rocket.intermotor_d ;
+Rocket.motorLength = Rocket.motor_lengthP + Rocket.motor_lengthF + Rocket.intermotor_d ;
 Rocket.motor_delay = InfoP{4}{1};
-Rocket.propel_mass = Rocket.propel_massP + Rocket.propel_massF ;
+Rocket.propelMass = Rocket.propel_massP + Rocket.propel_massF ;
 Rocket.motor_mass = Rocket.motor_massP + Rocket.motor_massF; 
 Rocket.casing_mass = Rocket.casing_massP + Rocket.casing_massF ;
 
@@ -72,10 +72,10 @@ Rocket.Thrust_Time = time;
 Rocket.Thrust_Force = ThrustP;
 
 % Burn time
-Rocket.Burn_Time = time(end);
+Rocket.burnTime = time(end);
 
 % Mass variation coefficient
 A_T = trapz(time,ThrustP);
-Rocket.Thrust2dMass_Ratio = Rocket.propel_mass/(A_T);    
+Rocket.Thrust2dMass_Ratio = Rocket.propelMass/(A_T);    
 end
 end

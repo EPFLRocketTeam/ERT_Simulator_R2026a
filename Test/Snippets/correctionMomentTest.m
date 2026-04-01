@@ -13,7 +13,7 @@ end
 function rocket = buildRocket()
     rocket.Sm        = 0.02;   % Reference area [m^2]
     Rocket.length         = 3.0;    % Total length [m]
-    rocket.Burn_Time = 5.0;    % Burn time [s]
+    rocket.burnTime = 5.0;    % Burn time [s]
 end
  
 function env = buildEnvironnement()
