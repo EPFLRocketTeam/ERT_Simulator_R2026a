@@ -139,8 +139,8 @@ classdef multilayerwindSimulator3D_ode23 < handle
             ZE = [0, 0, 1]';
 
             % Rocket Inertia
-            [M,dMdt,Cm,~,I_L,~,I_R,~] = Mass_Properties(t,obj.Rocket,'NonLinear');
-            I = C'*diag([I_L, I_L, I_R])*C; % Inertia TODO: I_R in Mass_Properties
+            [M,dMdt,Cm,~,I_L,~,I_R,~] = massProperties(t,obj.Rocket,'NonLinear');
+            I = C'*diag([I_L, I_L, I_R])*C; % Inertia TODO: I_R in massProperties
 
             % Environment
             g = 9.81;               % Gravity [m/s2] 
@@ -376,8 +376,8 @@ classdef multilayerwindSimulator3D_ode23 < handle
             ZE = [0, 0, 1]';
 
             % Rocket Inertia
-            [M,dMdt,Cm,~,I_L,~,I_R,~] = Mass_Properties(t,obj.Rocket,'NonLinear');
-            I = C'*diag([I_L, I_L, I_R])*C; % Inertia TODO: I_R in Mass_Properties
+            [M,dMdt,Cm,~,I_L,~,I_R,~] = massProperties(t,obj.Rocket,'NonLinear');
+            I = C'*diag([I_L, I_L, I_R])*C; % Inertia TODO: I_R in massProperties
 
             % Environment
             g = 9.81;               % Gravity [m/s2]

@@ -1,5 +1,5 @@
 classdef massLinTest < matlab.unittest.TestCase
-    % Unit tests for Mass_Properties.m
+    % Unit tests for massProperties.m
     properties
         AbsTol = 1e-10;
     end
@@ -55,7 +55,7 @@ classdef massLinTest < matlab.unittest.TestCase
             R = rocketHybrid();
             t = R.Burn_Time + 1;
 
-            [M,dMdt] = Mass_Properties(t,R);
+            [M,dMdt] = massProperties(t,R);
 
             exp_M = R.rocket_m + R.casing_mass;
 

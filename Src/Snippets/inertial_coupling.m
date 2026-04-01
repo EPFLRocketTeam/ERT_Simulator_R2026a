@@ -258,7 +258,7 @@ function dXdt = DiffEq3D(t, X)
 
 % state variables
 [T, a, p, rho, nu] = atmosphere(X(3), Environment)
-[M,dMdt,Cm,~,I_L,~,I_R,~] = Mass_Properties(t, obj.Rocket,'NonLinear');
+[M,dMdt,Cm,~,I_L,~,I_R,~] = massProperties(t, obj.Rocket,'NonLinear');
 [CNa, Xcp,CNa_bar,CP_bar] = normalLift(obj.Rocket, alpha_cm, 1.1,...
                 Mach, angle(3), 1);
 

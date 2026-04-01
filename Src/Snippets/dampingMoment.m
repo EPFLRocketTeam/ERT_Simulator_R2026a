@@ -12,7 +12,7 @@ function C2 = dampingMoment(t,Rocket,Calpha,CP,Velocity,Environnement,Altitude)
 % 2 Subparameter
 %--------------------------------------------------------------------------
 %2.1 Thrust damping coefficient 
-CR2 = dMdt*(Rocket.L-Cm).^2;
+CR2 = dMdt*(Rocket.length-Cm).^2;
 
 %2.2 Aerodynamic damping coefficient
 CNa_Total = sum(Calpha.*(CP-Cm).^2);

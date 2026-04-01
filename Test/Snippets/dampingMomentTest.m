@@ -13,7 +13,7 @@ end
 %--------------------------------------------------------------------------
 function rocket = buildRocket()
     rocket.Sm        = 0.02;   % Reference area [m^2]
-    rocket.L         = 3.0;    % Total rocket length [m]
+    Rocket.length         = 3.0;    % Total rocket length [m]
     rocket.Burn_Time = 5.0;
 end
  

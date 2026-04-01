@@ -11,7 +11,7 @@ function CDM = pitchDampingMoment(Rocket, rho, Calpha, CP, dMdt, CM, w, V)
         % Thrust damping
         % -------------------------------------------------------------------------
 
-        CDM_thrust = dMdt*(Rocket.L-CM).^2*w*2/V^2/rho/Rocket.Sm;
+        CDM_thrust = dMdt*(Rocket.length-CM).^2*w*2/V^2/rho/Rocket.Sm;
 
         % -------------------------------------------------------------------------
         % Aerdynamic damping

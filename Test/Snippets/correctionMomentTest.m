@@ -1,6 +1,6 @@
 %  Tests the corrective moment c1 = 0.5 * rho * sm * v^2 * cNa * (xp - cm)
 %
-%  Dependencies mocked: stdAtmos, Mass_Properties
+%  Dependencies mocked: stdAtmos, massProperties
 %  Run with: results = runtests('test_CorrectionMoment')
  
 function tests = correctionMomentTest
@@ -12,7 +12,7 @@ end
 %--------------------------------------------------------------------------
 function rocket = buildRocket()
     rocket.Sm        = 0.02;   % Reference area [m^2]
-    rocket.L         = 3.0;    % Total length [m]
+    Rocket.length         = 3.0;    % Total length [m]
     rocket.Burn_Time = 5.0;    % Burn time [s]
 end
  
@@ -42,10 +42,10 @@ function test_NominalPositiveStability(testCase)
     velocity = 250;    % m/s
     cNa      = 10.0;   % Normal-force slope [1/rad]
     xp       = 2.0;    % Centre of pressure (from nose) [m]
-    % Mass_Properties will return cm = 1.5 for t=0 via the real function;
+    % massProperties will return cm = 1.5 for t=0 via the real function;
     % here we test the sign and rough magnitude using a mock cm value.
     % We therefore call the function and only assert qualitative properties
-    % that must hold regardless of the exact cm returned by Mass_Properties.
+    % that must hold regardless of the exact cm returned by massProperties.
  
     c1 = correctionMoment(0, rocket, cNa, xp, velocity, env, 0);
  

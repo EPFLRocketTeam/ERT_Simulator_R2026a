@@ -19,7 +19,7 @@ kg_to_lbs = 2.20462262185;
 
 %% Rocket Information
 
-Airframe_Length_in = Rocket.L * m_to_in;
+Airframe_Length_in = Rocket.length * m_to_in;
 Airframe_Diameter_in = Rocket.dm * m_to_in;
 Fin_span_in = Rocket.fin_s * m_to_in;
 % LV weight with casing and without payload

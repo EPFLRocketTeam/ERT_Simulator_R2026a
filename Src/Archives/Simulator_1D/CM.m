@@ -11,9 +11,9 @@ function [cm dcmdt] = CM(t,Rocket)
 
 % Centre de masse
 cm = (Rocket.rocket_cm*Rocket.rocket_m + ... 
-    (M-Rocket.rocket_m)*(Rocket.L-Rocket.motor_length/2))/M;
+    (M-Rocket.rocket_m)*(Rocket.length-Rocket.motor_length/2))/M;
 
 % D?riv?e centre de masse
-dcmdt = (dMdt*(Rocket.L-Rocket.motor_length/2)-dMdt*cm)/M;
+dcmdt = (dMdt*(Rocket.length-Rocket.motor_length/2)-dMdt*cm)/M;
 end
 

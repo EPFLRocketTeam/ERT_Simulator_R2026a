@@ -258,10 +258,10 @@ Rocket.fin_df = interp1(Rocket.stage_z, Rocket.diameters, Rocket.fin_xt+Rocket.f
 % 4.6 Virtual fin planform area
 Rocket.fin_SF = Rocket.fin_SE + 1/2*Rocket.fin_df*Rocket.fin_cr; 
 % 4.8 Rocket Length
-Rocket.L = Rocket.stage_z(end);
+Rocket.length = Rocket.stage_z(end);
 
 % 4.9 Rocket inertia + motor and tank inertia
-[~, ~, ~, ~, I_L, ~, I_R, ~] = Mass_Properties(0, Rocket, 'Linear');
+[~, ~, ~, ~, I_L, ~, I_R, ~] = massProperties(0, Rocket, 'Linear');
 if ~isfield(Rocket, 'rocket_inertia')
     Rocket.rocket_inertia = [I_L, 0, 0; 0, I_L, 0; 0, 0, I_R];
 end

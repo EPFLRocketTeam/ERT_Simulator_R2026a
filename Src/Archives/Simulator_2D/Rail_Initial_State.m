@@ -10,7 +10,7 @@ alpha = Environnement.Rail_Angle;
 V_inf = Environnement.V_inf;
 
 % Necessary function calls
-[M,dMdt,Cm,dCmdt,I_L,dI_Ldt,I_R,dI_Rdt] = Mass_Properties(t,Rocket,'NonLinear');
+[M,dMdt,Cm,dCmdt,I_L,dI_Ldt,I_R,dI_Rdt] = massProperties(t,Rocket,'NonLinear');
 [Temp, a, p, rho, Nu] = stdAtmos(x(1),Environnement); % Atmosphere information
 T = Thrust(t,Rocket);   % Motor thrust
 g = 9.81;               % Gravity []

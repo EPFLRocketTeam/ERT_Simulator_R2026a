@@ -151,7 +151,7 @@ SimObj.Rocket.fin_df = SimObj.Rocket.dm;
 % 4.6 Virtual fin planform area
 SimObj.Rocket.fin_SF = SimObj.Rocket.fin_SE + 1/2*SimObj.Rocket.fin_df*SimObj.Rocket.fin_cr; 
 % 4.8 Rocket Length
-SimObj.Rocket.L = SimObj.Rocket.stage_z(end);
+SimObj.Rocket.length = SimObj.Rocket.stage_z(end);
 % Saturation Vapor Ration
 p_ws = exp(77.345+0.0057*SimObj.Environment.Temperature_Ground-7235/SimObj.Environment.Temperature_Ground)/SimObj.Environment.Temperature_Ground^8.2;
 p_a = SimObj.Environment.Pressure_Ground;

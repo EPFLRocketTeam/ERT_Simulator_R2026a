@@ -87,7 +87,7 @@ function [T2,X2, ab_control] = Sim_Airbrakes(Rocket, Environment, AB_drag, AB_ta
     V_inf = Environment.V_inf;        % Vitesse du vent [m/s]
 
     % Appels des fonctions necessaires
-    [M,dMdt,Cm,dCmdt,I_L,dI_Ldt,I_R,dI_Rdt] = Mass_Properties(t,Rocket,'Linear');
+    [M,dMdt,Cm,dCmdt,I_L,dI_Ldt,I_R,dI_Rdt] = massProperties(t,Rocket,'Linear');
     [Temp, a, p, rho] = stdAtmos(x(3)); % Atmosphere [K,m/s,Pa,kg/m3]
     g = 9.81;                           % Gravite [m2/s]
 
