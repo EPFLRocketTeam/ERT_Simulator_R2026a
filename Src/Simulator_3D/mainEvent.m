@@ -1,4 +1,4 @@
-function [value, isterminal, direction] = MainEvent(T, X, Rocket)
+function [value, isterminal, direction] = mainEvent(T, X, Rocket)
 % MAINEVENT event function to detect unreefing altitude
 
 value = (X(3)>Rocket.mainParachuteDeploymentAltitude) - 0.5;

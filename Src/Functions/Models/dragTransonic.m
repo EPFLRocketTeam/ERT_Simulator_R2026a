@@ -11,6 +11,8 @@ function dragCoefficient = dragTransonic(rocket, angleOfAttack, freestreamVeloci
     % - Drag Coefficient Prediction, Chapter 1 Preetam Sharma
     % Semester Project Report, Professor Flavio Noca, December 2021.
 
+    %REMARK: drag is independent of alpha (subsitious) + lotta magic numbers
+
     % -------------------------------------------------------------------------
     % 0.1 Velocity validation
     % -------------------------------------------------------------------------

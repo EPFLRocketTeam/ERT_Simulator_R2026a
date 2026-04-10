@@ -10,7 +10,7 @@ function [M,dMdt,Cm,dCmdt,I_L,dI_Ldt,I_R,dI_Rdt] = massProperties(t,Rocket,Opt)
 %   - Cm        Center of Mass [m]
 %   - dCmdt     Derivative of Center of Mass [m/s]
 %   - I_L       Longitudinal Moment of Inertia [kgm^2]
-%   - dI_Ldt    Derivative of L. Moment of Inertia [kgm^2/s]
+%   - dI_Ldt    Derivative of length. Moment of Inertia [kgm^2/s]
 %   - I_R       Rotational Moment of Inertia [kgm^2]
 %   - dI_Rdt    Derivative of R. Moment of Inertia [kgm^2/s]
 
@@ -39,9 +39,9 @@ elseif strcmp(Opt, 'NonLinear')
         dMdt = 0;
     else
         tt = linspace(0,t,500);
-        Current_Impulse = trapz(tt,thrust(tt,Rocket));
+        currentImpulse = trapz(tt,thrust(tt,Rocket));
         M = Rocket.emptyMass + Rocket.motorMass - ... 
-        Rocket.Thrust2dMass_Ratio*Current_Impulse;
+        Rocket.Thrust2dMass_Ratio*currentImpulse;
         dMdt = Rocket.Thrust2dMass_Ratio*thrust(t,Rocket);
     end
 else
@@ -109,9 +109,9 @@ elseif strcmp(Opt, 'NonLinear')
         dMdt = 0;
     else
         tt = linspace(0,t,500);
-        Current_Impulse = trapz(tt,thrust(tt,Rocket));
+        currentImpulse = trapz(tt,thrust(tt,Rocket));
         M = Rocket.emptyMass + Rocket.motorMass - ... 
-        Rocket.Thrust2dMass_Ratio*Current_Impulse;
+        Rocket.Thrust2dMass_Ratio*currentImpulse;
         dMdt = Rocket.Thrust2dMass_Ratio*thrust(t,Rocket);
     end
 else
@@ -165,4 +165,5 @@ I_R = 1e6;
 dI_Rdt = 0;
 end
 end
+
 

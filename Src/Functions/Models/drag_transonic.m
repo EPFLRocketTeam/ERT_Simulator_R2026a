@@ -15,12 +15,14 @@ function Value = drag_transonic(Rocket, alpha, Uinf, nu, a)
     % 0.1 Change of units from m to ft and inches
     % -------------------------------------------------------------------------
     
-    % velocities in ft
-    a = a * 3.28084;
-    Uinf = Uinf * 3.28084;
-    
-    % nu in ft2/s
-    mu = nu * 3.28084^2;
+%     % velocities in ft
+%     a = a * 3.28084;
+%     Uinf = Uinf * 3.28084;
+%     
+%     % nu in ft2/s
+%     mu = nu * 3.28084^2;
+
+%REMARK: drag is independent of alpha (subsitious) + lotta magic numbers
 
     % -------------------------------------------------------------------------
     % 0.2 Divergence 
@@ -36,34 +38,34 @@ function Value = drag_transonic(Rocket, alpha, Uinf, nu, a)
     M = Uinf/a; % Mach number
     
     % Geometry of the rocket (inches, deg)
-    L = Rocket.stagePositions(end) * 39.3701;                 % Lenght of the rocket
-    Ln = Rocket.stagePositions(2) * 39.3701;     % Length of the rocket's nose
-    d = Rocket.maxDiameter * 39.3701;           % Maximum rocket diameter
+    L = Rocket.stage_z(end);% * 39.3701;                 % Lenght of the rocket
+    Ln = Rocket.stage_z(2);% * 39.3701;     % Length of the rocket's nose
+    d = Rocket.dm;% * 39.3701;           % Maximum rocket diameter
     r = d / 2;                                       % Maximum rocket radius
-    db = Rocket.stageDiameters(end) * 39.3701;             % Base diameter of rocket at aft end
+    db = Rocket.diameters(end);% * 39.3701;             % Base diameter of rocket at aft end
     Lo = L - Ln;                                     % Rocket length to body ratio, where the length is taken aft of the maximum body-diameter position: Assuming no boatrails TODO: calculate for boatrails presence
     Lb = L;                                          % Base position ATTENTION PEUT ETRE FAUX
     Le = L;                                          % Effective length of rocket ATTENTION PEUT ETRE FAUX
-    Cr = Rocket.finRootChord * 39.3701;                % Root chord of fin
-    Ct = Rocket.finTipChord * 39.3701;                % Tip chord of fin
-    Nf = Rocket.numFins;                      % Fin number
-    t = Rocket.finThickness* 39.3701;          % Maximum thickness of fin
-    Xtc = Rocket.finLeadingEdgeLength;                                         % Distance from fin leading edge to maximum thickness
+    Cr = Rocket.fin_cr;% * 39.3701;                % Root chord of fin
+    Ct = Rocket.fin_ct;% * 39.3701;                % Tip chord of fin
+    Nf = Rocket.fin_n;                      % Fin number
+    t = Rocket.fin_t;%* 39.3701;          % Maximum thickness of fin
+    Xtc = Rocket.fin_L1;                                         % Distance from fin leading edge to maximum thickness
     
     % First useful parameters
-    SB = 2 * pi * d / 2 * (L - Ln) + pi * d / 2 * Ln; % Total wetted surface area of body ATTENTION ICI PAS EXACTE
-    Sf = Rocket.virtualFinArea;       % Total wetted surface area of fins % Other possible calculation: bs2*(L-Lf+Cr-bs2/np.tan(np.deg2rad(Thetaf)))
+    SB = 2 * pi * d / 2 * (L - Ln) + pi * d / 2 * sqrt(Ln^2 + d^2 / 4); % Total wetted surface area of body ATTENTION ICI PAS EXACTE
+    Sf = Rocket.fin_SF;       % Total wetted surface area of fins % Other possible calculation: bs2*(L-Lf+Cr-bs2/np.tan(np.deg2rad(Thetaf)))
     Sr = SB + Sf;                                    % Total wetted surface area of rocket
     Xtcbar = Xtc / Cr;                               % Normalized distance from fin leading edge to maximum thickness
     
     %Material coefficients
-    KB = 0.0004;
-    KF = 0.0008;
+    KB = 1.016e-5;
+    KF = 2.032e-5;
     
     % May be of use
-    Lf = Rocket.finRootPosition * 39.3701; %Position of LE of fin
-    % Thetaf = atan((Rocket.get_finSweepDistance)/(Rocket.get_finSpanpan)) % Sweep angle (deg)
-    % bs2 = Rocket.get_finSpanpan * 39.3701 % Lenght of fin
+    Lf = Rocket.fin_xt;% * 39.3701; %Position of LE of fin
+    % Thetaf = atan((Rocket.get_fin_xs)/(Rocket.get_fin_span)) % Sweep angle (deg)
+    % bs2 = Rocket.get_fin_span * 39.3701 % Lenght of fin
 
     % Limitation of model
     if Ln/Le > 0.6
@@ -161,7 +163,7 @@ function Value = drag_transonic(Rocket, alpha, Uinf, nu, a)
         Lnosprot = Lf+Cr/2;
         Aprot = pi/4*tpro*(2*r+tpro);
         
-        Rnstar = a*M*Lp/(12*mu)*(1 + 0.0283*M - 0.043*M^2 + 0.2107*M^3 - 0.03829*M^4 + 0.002709*M^5); %Compressible Reynolds Number
+        Rnstar = a*M*Lp/(12*nu)*(1 + 0.0283*M - 0.043*M^2 + 0.2107*M^3 - 0.03829*M^4 + 0.002709*M^5); %Compressible Reynolds Number
         Cfstar = 0.037036*Rnstar^(-0.155079); %Incompressible skin friction coefficient
         Cf = Cfstar*(1+0.00798*M-0.1813*M^(2)+0.0632*M^(3)-0.00933*M^(4)+0.000549*M^(5)); %Compressible skin friction coefficient
         Cftermstar = 1/((1.89+1.62*log10(Lp/Kp))^(2.5)); %Incompressible skin friction coefficient with roughness
@@ -184,7 +186,7 @@ function Value = drag_transonic(Rocket, alpha, Uinf, nu, a)
         Lnosprot = L-Lp;
         Aprot = pi*tpro*(2*r+tpro);
         
-        Rnstar = a*M*Lp/(12*mu)*(1 + 0.0283*M - 0.043*M^2 + 0.2107*M^3 - 0.03829*M^4 + 0.002709*M^5); %Compressible Reynolds Number
+        Rnstar = a*M*Lp/(12*nu)*(1 + 0.0283*M - 0.043*M^2 + 0.2107*M^3 - 0.03829*M^4 + 0.002709*M^5); %Compressible Reynolds Number
         Cfstar = 0.037036*Rnstar^(-0.155079); %Incompressible skin friction coefficient
         Cf = Cfstar*(1+0.00798*M-0.1813*M^(2)+0.0632*M^(3)-0.00933*M^(4)+0.000549*M^(5)); %Compressible skin friction coefficient
         Cftermstar = 1/((1.89+1.62*log10(Lp/Kp))^(2.5)); %Incompressible skin friction coefficient with roughness

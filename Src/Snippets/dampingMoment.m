@@ -1,11 +1,11 @@
-function C2 = DampingMoment(t,Rocket,Calpha,CP,Velocity,Environnement,Altitude)
+function C2 = dampingMoment(t,Rocket,Calpha,CP,Velocity,Environnement,Altitude)
 % Give damping moment based on rocket geometry & motor caracteristics
 %
 
 %--------------------------------------------------------------------------
 % 1 Intrasic parameter
 %--------------------------------------------------------------------------
-[T, a, p, density, Nu] = stdAtmos(Altitude,Environnement);
+[T, a, p, rho, Nu] = stdAtmos(Altitude,Environnement);
 [M,dMdt,Cm,dCmdt,I_L,dI_Ldt,I_R,dI_Rdt] = massProperties(t,Rocket,'NonLinear');
 
 %--------------------------------------------------------------------------
@@ -23,4 +23,5 @@ CA2 = density*Velocity*Rocket.maxCrossSectionArea/2*CNa_Total;
 %--------------------------------------------------------------------------
 C2 = CR2+CA2;
 end
+
 
