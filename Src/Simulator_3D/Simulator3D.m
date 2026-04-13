@@ -152,7 +152,7 @@ classdef Simulator3D < handle
             
             % Inertia using the given I_rocket and the motor
             % Compute I_motor (approximate by speedOfSound cylinder)
-            motorInertia = inertia_fill_cylinder(mass, ...
+            motorInertia = inertiaFillCylinder(mass, ...
                 obj.rocket.motorLength, obj.rocket.motorDiameter / 2);
             % Total inertia
             %inertiaMatrix = inertial_matrix(obj.rocket, centerOfMass, time);
@@ -163,7 +163,7 @@ classdef Simulator3D < handle
             inertiaMatrix = rotationMatrix' * inertiaMatrix * rotationMatrix; % Transfert to earth coordinates
 
             % Temporal derivative of inertial matrix
-            dIdt = inertia_fill_cylinder(massRate, obj.rocket.motorLength, ...
+            dIdt = inertiaFillCylinder(massRate, obj.rocket.motorLength, ...
                 obj.rocket.motorDiameter / 2); % Inertial matrix time derivative
             dIdt = rotationMatrix' * dIdt * rotationMatrix; % Transfert to earth coordinates
 
@@ -808,7 +808,7 @@ classdef Simulator3D < handle
             timeSpan = [0, 5];
 
             % options
-            options = odeset('Events', @(time,x) RailEvent(time,x,obj.environment));
+            options = odeset('Events', @(time,x) railEvent(time,x,obj.environment));
 
             % integration
             [railTime, railState] = ode45(@(time,x) obj.Dynamics_Rail_1DOF(time, x), timeSpan, initialPosition, options); 
@@ -873,7 +873,7 @@ classdef Simulator3D < handle
             timeSpan = [initialTime, 5000];
 
             % options 
-            options = odeset('Events', @(thrust,position) MainEvent(thrust,position,obj.rocket));
+            options = odeset('Events', @(thrust,position) mainEvent(thrust,position,obj.rocket));
 
             % integration
             [drogueTime,drogueState, drogueTimeEvents, drogueStateEvents, drogueEventIndices] = ode45(@(time,state) obj.Dynamics_Parachute_3DOF(time,state,obj.rocket,obj.environment, mass, 0),timeSpan,initialState, options);
@@ -895,7 +895,7 @@ classdef Simulator3D < handle
             timeSpan = [initialTime, 5000];
 
             % options 
-            options = odeset('Events',@(thrust,position) CrashEvent(thrust,position,obj.environment));
+            options = odeset('Events',@(thrust,position) crashEvent(thrust,position,obj.environment));
 
             % integration
             [mainChuteTime, mainChuteState, mainChuteTimeEvents, S4E, mainChuteEventsIndices] = ode45(@(time,state) obj.Dynamics_Parachute_3DOF(time,state,obj.rocket,obj.environment, mass, 1),timeSpan,initialState, options);
@@ -914,7 +914,7 @@ classdef Simulator3D < handle
             timeSpan = [initialTime, 100];
 
             % options
-            options = odeset('Events',@(thrust,position) CrashEvent(thrust,position,obj.environment));
+            options = odeset('Events',@(thrust,position) crashEvent(thrust,position,obj.environment));
 
             % integration
             [crashTime,crashState, crashTimeEvents, crashStateEvents, crashEventIndices] = ode45(@(time,state) obj.Dynamics_3DOF(time,state,obj.rocket,obj.environment),timeSpan,initialState, options);

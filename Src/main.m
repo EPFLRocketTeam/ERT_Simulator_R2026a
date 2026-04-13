@@ -12,7 +12,7 @@ addpath(genpath('./Declarations'),...
 % Rocket Definition
 rocket = rocketReader('Nordend_EUROC.txt');
 environment = environnementReader('Environment/Environnement_Definition_EuRoC.txt');
-simulationOutputs = SimOutputReader('Simulation/Simulation_outputs.txt');
+simulationOutputs = simOutputReader('Simulation/Simulation_outputs.txt');
 simulator3D = Simulator3D(rocket, environment, simulationOutputs);
 
 %% ------------------------------------------------------------------------
@@ -162,7 +162,7 @@ xLimits = [min([flightState(:,1); drogueState(:,1); mainChuteState(:,1); crashSt
 yLimits = [min([flightState(:,2); drogueState(:,2); mainChuteState(:,2); crashState(:,2)]) ...
            max([flightState(:,2); drogueState(:,2); mainChuteState(:,2); crashState(:,2)])];
 zLimits = [0 max([flightState(:,3); drogueState(:,3); mainChuteState(:,3); crashState(:,3)])];
-
+axis([xLimits yLimits zLimits])
 colormap('jet');
 surf(environment.map_x, environment.map_y, environment.map_z, 'EdgeColor', 'none', 'DisplayName', 'Base Map');
 title '3D trajectory representation'
