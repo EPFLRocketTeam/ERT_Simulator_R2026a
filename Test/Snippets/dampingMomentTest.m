@@ -34,19 +34,7 @@ classdef dampingMomentTest < matlab.unittest.TestCase
             testCase.AddedPath = {functionPath};
         end
 
-        function rocket = buildRocket()
-            rocket.Sm        = 0.02;   % Reference area [m^2]
-            rocket.length         = 3.0;    % Total rocket length [m]
-            rocket.burnTime = 5.0;
-        end
-
-        function env = buildEnvironnement()
-            env.P0 = 101325;
-            env.T0 = 288.15;
-            env.L  = 0.0065;
-            env.R  = 287.05;
-            env.g  = 9.81;
-        end
+        
 
         %--------------------------------------------------------------------------
         % Test 1 – c2 is strictly positive under nominal conditions
@@ -177,3 +165,17 @@ classdef dampingMomentTest < matlab.unittest.TestCase
         end
     end
 end
+
+function rocket = buildRocket()
+            rocket.Sm        = 0.02;   % Reference area [m^2]
+            rocket.length         = 3.0;    % Total rocket length [m]
+            rocket.burnTime = 5.0;
+        end
+
+        function env = buildEnvironnement()
+            env.P0 = 101325;
+            env.T0 = 288.15;
+            env.L  = 0.0065;
+            env.R  = 287.05;
+            env.g  = 9.81;
+        end

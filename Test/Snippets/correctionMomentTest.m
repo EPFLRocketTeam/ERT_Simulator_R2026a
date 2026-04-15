@@ -32,31 +32,7 @@ classdef correctionMomentTest < matlab.unittest.TestCase
             testCase.AddedPath = {functionPath};
         end
 
-        %--------------------------------------------------------------------------
-        % Fixtures
-        %--------------------------------------------------------------------------
-        function rocket = buildRocket()
-            rocket.Sm        = 0.02;   % Reference area [m^2]
-            Rocket.length         = 3.0;    % Total length [m]
-            rocket.burnTime = 5.0;    % Burn time [s]
-        end
 
-        function env = buildEnvironnement()
-            env.P0 = 101325;
-            env.T0 = 288.15;
-            env.L  = 0.0065;
-            env.R  = 287.05;
-            env.g  = 9.81;
-        end
-
-        %--------------------------------------------------------------------------
-        % Helper: analytically expected c1
-        %   Uses sea-level ISA: rho = 1.225 kg/m^3
-        %   c1 = 0.5 * rho * sm * v^2 * cNa * (xp - cm)
-        %--------------------------------------------------------------------------
-        function c1Expected = expectedC1(sm, rho, v, cNa, xp, cm)
-            c1Expected = 0.5 * rho * sm * v^2 * cNa * (xp - cm);
-        end
 
         %--------------------------------------------------------------------------
         % Test 1 – Nominal positive stability (xp > cm)
@@ -158,3 +134,20 @@ classdef correctionMomentTest < matlab.unittest.TestCase
         end
     end
 end
+
+%--------------------------------------------------------------------------
+        % Fixtures
+        %--------------------------------------------------------------------------
+        function rocket = buildRocket()
+            rocket.Sm        = 0.02;   % Reference area [m^2]
+            rocket.length         = 3.0;    % Total length [m]
+            rocket.burnTime = 5.0;    % Burn time [s]
+        end
+
+        function env = buildEnvironnement()
+            env.P0 = 101325;
+            env.T0 = 288.15;
+            env.L  = 0.0065;
+            env.R  = 287.05;
+            env.g  = 9.81;
+        end
