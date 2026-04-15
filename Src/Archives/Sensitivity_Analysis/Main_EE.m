@@ -20,32 +20,32 @@ p = 100; % mesh simuze of the input space p-level grid
 r = 50; % Number of rep etition for the EE analysis
 sigma = 0.10; % Relative size of the input domains (intervals)
 
-% missing fin_n, ab_n and lug_n.
-Xid = [ "dmin" "dd" "z1" "z12" "z23" "fin_xt" "fin_s" "fin_cr" "fin_ct" "fin_xs" ...
-        "fin_t" "lug_S" "emptyMass" "rocket_I" "emptyCenterOfMass" "ab_x" "ab_phi" ... 
-        "pl_mass" "para_main_SCD" "para_drogue_SCD" "para_main_event" "intermotor_d" "motor_diaP" ...
+% missing numFins, numAirbrakes and numLaunchLugs.
+Xid = [ "dmin" "dd" "z1" "z12" "z23" "finRootPosition" "finSpan" "finRootChord" "finTipChord" "finSweepDistance" ...
+        "finThickness" "lugSurfaceArea" "emptyMass" "emptyInertia" "emptyCenterOfMass" "airbrakePosition" "airbrakeAngle" ... 
+        "payloadMass" "mainParachuteDragArea" "drogueParachuteDragArea" "mainParachuteDeploymentAltitude" "interMotorDistance" "motor_diaP" ...
         "motor_lengthP" "propel_massP" "motor_massP" "motor_diaF" "motor_lengthF" "propel_massF" ...
-        "motor_massF" "burnTime" "T1" "T2" "Temperature_Ground" "Pressure_Ground" "Humidity_Ground"  ... 
-        "Start_Altitude" "dTdh" "Rail_Length" "Rail_Angle" "Rail_Azimuth"...
+        "motor_massF" "burnTime" "railTime" "flightTime" "groundTemperature" "groundPressure" "groundHumidity"  ... 
+        "startAltitude" "dTdh" "railLength" "railAngle" "railAzimuth"...
         "Vi1" "Vi2" "Vi3" "Vi4" "Vi5" "Vi6" "ai1" "ai2" "ai3" "ai4" "ai5" "ai6"]';
     
 Yid = ["Veor" "apogee" "t@apogee" "Vmax" "Vmax@t" "Cdmax" "a_max" "margin_min" "CNa_min" "MarCNa_min" "MarCNa_av" "landing_azi" "landing_drift"];
 
 %Less inputs for debugging
-%Xid = [ "dmin" "dd" "z1" "z12" "z23" "fin_xt"]'; 
+%Xid = [ "dmin" "dd" "z1" "z12" "z23" "finRootPosition"]'; 
 %Yid = ["Veor" "apogee"];
 
 % Base input values
 Rocket = rocketReader('BL2_H3.txt'); 
 Environment = environnementReader('Environment/Environnement_Definition_SA.txt'); %with exactly 6 windlayers
-SimOutputs = SimOutputReader('Simulation/Simulation_outputs.txt');
+simulationOutputs = SimOutputReader('Simulation/Simulation_outputs.txt');
  
 % Base simulator object
-SimObj = multilayerwindSimulator3D(Rocket, Environment, SimOutputs);
+simulatior3D = multilayerwindSimulator3D(Rocket, Environment, simulationOutputs);
 
 %% EE analysis
-XX = baseValues(SimObj, Xid, sigma);
-Delta = p/(2*(p-1));
+XX = baseValues(simulatior3D, Xid, sigma);
+flightPathAngle = p/(2*(p-1));
 k = length(Xid);
 o = length(Yid);
 d = NaN(r, k, o);
@@ -62,7 +62,7 @@ for l = 1:r
     X = B_l'.*(XX(:,3) - XX(:,2)) + XX(:,2);
     
     % Evaluating the simulator at each sample
-    Y_l = SimAPI(SimObj, Xid, Yid, X); 
+    Y_l = SimAPI(simulatior3D, Xid, Yid, X); 
     
     % Computing the elemetary effects
     d(l, :, :) = (Y_l(:,EEid(2,:)) - Y_l(:,EEid(1,:)))';

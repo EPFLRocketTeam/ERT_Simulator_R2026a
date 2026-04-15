@@ -106,12 +106,12 @@ for i=1:k
             isChanged_ai = true;
         case "burnTime"
             SimObj.Rocket.burnTime = X(i);
-            SimObj.Rocket.Thrust_Time =  X(i) * Thrust_Time_NV;
+            simulatior3D.Rocket.Thrust_Time =  X(i) * Thrust_Time_NV;
         otherwise
             if ismember(id, rocketparamIDs)
-                SimObj.Rocket.(id) = X(i);
+                simulatior3D.Rocket.(id) = X(i);
             elseif ismember(id, envparamIDs)
-                SimObj.Environment.(id) = X(i);
+                simulatior3D.Environment.(id) = X(i);
             else
                 print("Error: unknown parameter (", id, ")");
             end

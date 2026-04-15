@@ -4,7 +4,7 @@ classdef multilayerwindSimulator3D < handle
 % Class properties
 % -------------------------------------------------------------------------
    properties(Access = public)
-      SimAuxResults; 
+      simAuxResults; 
    end
 
    properties(Access = public)
@@ -18,16 +18,16 @@ classdef multilayerwindSimulator3D < handle
       tmp_Margin
       tmp_Alpha
       tmp_Cn_alpha
-      tmp_Xcp
-      tmp_Cd
-      tmp_Mass
-      tmp_CM
-      tmp_Il
-      tmp_Ir
+      tmpCenterOfPressure
+      tmpDragCoefficient
+      tmpMass
+      tmpCenterOfMass
+      tmpInertiaLong
+      tmpInertiaRot
       tmp_Delta
       
-      tmp_Nose_Alpha
-      tmp_Nose_Delta
+      tmpNoseAngleOfAttack
+      tmpNoseFlightPathAngle
    end
    
 % -------------------------------------------------------------------------  
@@ -48,19 +48,19 @@ classdef multilayerwindSimulator3D < handle
            end
  
            % Initialise Auxiliary results structure
-           obj.SimAuxResults.Margin = [];
-           obj.SimAuxResults.Alpha = [];
-           obj.SimAuxResults.Cn_alpha = [];
-           obj.SimAuxResults.Xcp = [];
-           obj.SimAuxResults.Cd = [];
-           obj.SimAuxResults.Mass = [];
-           obj.SimAuxResults.CM = [];
-           obj.SimAuxResults.Il = [];
-           obj.SimAuxResults.Ir = [];
-           obj.SimAuxResults.Delta = [];
+           obj.simAuxResults.stabilityMargin = [];
+           obj.simAuxResults.angleOfAttack = [];
+           obj.simAuxResults.normalForceCoefficientSlope = [];
+           obj.simAuxResults.centerOfPressure = [];
+           obj.simAuxResults.dragCoefficient = [];
+           obj.simAuxResults.mass = [];
+           obj.simAuxResults.centerOfMass = [];
+           obj.simAuxResults.inertiaLong = [];
+           obj.simAuxResults.inertiaRot = [];
+           obj.simAuxResults.flightPathAngle = [];
            
-           obj.SimAuxResults.Nose_Alpha = [];
-           obj.SimAuxResults.Nose_Delta = [];
+           obj.simAuxResults.noseAngleOfAttack = [];
+           obj.simAuxResults.noseFlightPathAngle = [];
        end
        
    end

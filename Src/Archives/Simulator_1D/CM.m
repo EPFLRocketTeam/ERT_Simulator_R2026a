@@ -1,4 +1,4 @@
-function [cm dcmdt] = CM(t,Rocket)
+function [cm dcmdt] = centerOfMass(t,Rocket)
 %	Return the rocekt center of mass
 %   INPUT:
 %   - t         Time
@@ -7,7 +7,7 @@ function [cm dcmdt] = CM(t,Rocket)
 %   - cm        Center of mass
 
 % Appels de fonctions necessaires
-[M,dMdt] = Mass_Lin(t,Rocket);
+[M,dMdt] = massLin(t,Rocket);
 
 % Centre de masse
 cm = (Rocket.emptyCenterOfMass*Rocket.emptyMass + ... 

@@ -1,6 +1,6 @@
 function [M,dMdt,Cm,dCmdt,I_L,dI_Ldt,I_R,dI_Rdt] = massProperties(t,Rocket,Opt)
 %Return the global mass properties of the rocket
-%   [M,dMdt,Cm,dCmdt,I_L,dI_Ldt,I_R,dI_Rdt] = Mass_Properties_Lin(t,Rocket)
+%   [M,dMdt,Cm,dCmdt,I_L,dI_Ldt,I_R,dI_Rdt] = massProperties_Lin(t,Rocket)
 %   INPUT:
 %   - t         Time [s]
 %   - Rocket    Matlab structure containing all data [.]
@@ -122,18 +122,18 @@ else
 %--------------------------------------------------------------------------
 % Centre de masse
 
-motor_cm = (Rocket.length - Rocket.motorLengthPropel/2 )* (Rocket.motorMassPropel - t*(Rocket.massPropel/Rocket.burnTime));
-motor_cmF = (Rocket.length - Rocket.motorLengthFuel/2 -Rocket.motorLengthPropel - Rocket.distanceInterMotors )* (Rocket.motorMassFuel - t*(Rocket.massFuel/Rocket.burnTime));
+motorCenterOfMass = (Rocket.totalLength - Rocket.motorLengthPropel/2 )* (Rocket.motorMassPropel - t*(Rocket.massPropel/Rocket.burnTime));
+motorCenterOfMassFuel = (Rocket.totalLength - Rocket.motorLengthFuel/2 -Rocket.motorLengthPropel - Rocket.interMotorDistance )* (Rocket.motorMassFuel - t*(Rocket.massFuel/Rocket.burnTime));
 % Centre de masse
 
-Cm = (Rocket.emptyCenterOfMass*Rocket.emptyMass +  motor_cm + motor_cmF )/M;
+Cm = (Rocket.emptyCenterOfMass*Rocket.emptyMass +  motorCenterOfMass + motorCenterOfMassFuel )/M;
 % D?riv?e centre de masse
-%dcmdtn = (dMdt*(Rocket.length-Rocket.motorLength)-dMdt*Cm)/M;
+%dcmdtn = (dMdt*(Rocket.totalLength-Rocket.motorLength)-dMdt*Cm)/M;
 
-%Cm =(Rocket.emptyCenterOfMass*Rocket.emptyMass +  (M-Rocket.emptyMass)*(Rocket.length-Rocket.motorLength/2))/M;
+%Cm =(Rocket.emptyCenterOfMass*Rocket.emptyMass +  (M-Rocket.emptyMass)*(Rocket.totalLength-Rocket.motorLength/2))/M;
  
 % Derivee centre de masse
-dCmdt = (dMdt*(Rocket.length-(Rocket.motorLength+Rocket.motorLengthFuel + Rocket.distanceInterMotors))/2-dMdt*Cm)/M;
+dCmdt = (dMdt*(Rocket.totalLength-(Rocket.motorLength+Rocket.motorLengthFuel + Rocket.interMotorDistance))/2-dMdt*Cm)/M;
 
 %--------------------------------------------------------------------------
 % Moment of Inertia
@@ -150,7 +150,6 @@ I_L_Grain = Grain_Mass*(Rocket.motorLength^2/12 + (R_e^2+R_i^2)/4);
 I_L = Rocket.emptyInertia + I_L_Casing + I_L_Grain + ...
     (Grain_Mass+Rocket.casingMass)*...
     (Rocket.length-Cm-Rocket.motorLength/2)^2; % I + ... + Steiner
-
 % dI_L/dt:
 dI_L_Grain = dMdt*(Rocket.motorLength^2/12 + (R_e^2+R_i^2)/4);
 

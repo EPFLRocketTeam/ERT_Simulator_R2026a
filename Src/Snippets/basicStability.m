@@ -22,8 +22,8 @@ for V_inf = V_infi
 a_0 = 0;    % Rail condition
 da_0 = 0;   % Rail condition
 [Calpha, CP] = barrowmanLift(Rocket,0,Velocity/346,0); % No roll
-[CNa, Xp] = normalLift(Rocket,0,1.1,Velocity/346,0,0);
-C1 = correctionMoment(0,Rocket,CNa,Xp,Velocity,Environnement,0);
+[normalForceCoefficientSlope, Xp] = normalLift(Rocket,0,1.1,Velocity/346,0,0);
+C1 = correctionMoment(0,Rocket,normalForceCoefficientSlope,Xp,Velocity,Environnement,0);
 C2 = dampingMoment(0,Rocket,Calpha,CP,Velocity,Environnement,0);
 [M,dMdt,Cm,dCmdt,I_L,dI_Ldt,I_R,dI_Rdt] = massProperties(Rocket.burnTime,Rocket,'Linear');
 
@@ -78,23 +78,23 @@ T_wind = [0.5 1 1.5]; % Wind rafal time [s]
 for t_wind = T_wind
  
 [Calpha, CP] = barrowmanLift(Rocket,0,Velocity/346,0); % No roll
-[CNa, Xp] = normalLift(Rocket,0,1.1,Velocity/346,0,0);
-C1 = correctionMoment(0,Rocket,CNa,Xp,Velocity,Environnement,0);
+[normalForceCoefficientSlope, Xp] = normalLift(Rocket,0,1.1,Velocity/346,0,0);
+C1 = correctionMoment(0,Rocket,normalForceCoefficientSlope,Xp,Velocity,Environnement,0);
 C2 = dampingMoment(0,Rocket,Calpha,CP,Velocity,Environnement,0);
 
 H = C1*atan(V_wind/Velocity)*t_wind
 % 1.2 Solutions:
-damp = C1/Rocket.rocket_I - C2^2/4/Rocket.rocket_I^2; % Damping ratio
+damp = C1/Rocket.emptyInertia - C2^2/4/Rocket.emptyInertia^2; % Damping ratio
 if damp > 0
-    D = C2/Rocket.rocket_I/2;
+    D = C2/Rocket.emptyInertia/2;
     w = sqrt(damp);
-    a = @(t) H/Rocket.rocket_I/w*exp(-D*t).*sin(w*t);
+    a = @(t) H/Rocket.emptyInertia/w*exp(-D*t).*sin(w*t);
 elseif damp == 0
-    D = C2/Rocket.rocket_I/2;
-    a = @(t) H/Rocket.rocket_I*t.*exp(-D*t);
+    D = C2/Rocket.emptyInertia/2;
+    a = @(t) H/Rocket.emptyInertia*t.*exp(-D*t);
 elseif damp <= 0
-    tau1 = 1/(C2/2/Rocket.rocket_I-sqrt(-damp));
-    tau2 = 1/(C2/2/Rocket.rocket_I+sqrt(-damp));
+    tau1 = 1/(C2/2/Rocket.emptyInertia-sqrt(-damp));
+    tau2 = 1/(C2/2/Rocket.emptyInertia+sqrt(-damp));
     a = @(t) H*tau1*tau2/(tau1-tau2)/I_l*(exp(-t/tau1)-exp(-t/tau2));
 end
 

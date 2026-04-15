@@ -5,13 +5,13 @@ function C1 = correctionMoment(t,Rocket,CNa,Xp,Velocity,Environnement,Altitude)
 %--------------------------------------------------------------------------
 % 1 Intrasic parameter
 %--------------------------------------------------------------------------
-[T, a, p, rho, Nu] = stdAtmos(Altitude,Environnement);
+[T, a, p, density, Nu] = stdAtmos(Altitude,Environnement);
 [M,dMdt,Cm,dCmdt,I_L,dI_Ldt,I_R,dI_Rdt] = massProperties(t,Rocket,'NonLinear');
 
 %--------------------------------------------------------------------------
 % 2 Total Damping Coefficient
 %--------------------------------------------------------------------------
-C1 = 1/2*rho*Rocket.Sm*Velocity^2*CNa*(Xp-Cm);
+C1 = 1/2*density*Rocket.maxCrossSectionArea*Velocity^2*normalForceCoefficientSlope*(Xp-Cm);
 
 end
 

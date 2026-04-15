@@ -20,30 +20,30 @@ warning('off');
 N = 50;
 sigma = 0.05; % Relative size of the input domains (intervals)
 
-% missing fin_n, ab_n and lug_n.
-Xid = [ "dmin" "dd" "z1" "z12" "z23" "fin_xt" "fin_s" "fin_cr" "fin_ct" "fin_xs" ...
-        "fin_t" "lug_S" "emptyMass" "rocket_I" "emptyCenterOfMass" "ab_x" "ab_phi" ... 
-        "pl_mass" "para_main_SCD" "para_drogue_SCD" "para_main_event" "intermotor_d" "motor_diaP" ...
+% missing numFins, numAirbrakes and numLaunchLugs.
+Xid = [ "dmin" "dd" "z1" "z12" "z23" "finRootPosition" "finSpan" "finRootChord" "finTipChord" "finSweepDistance" ...
+        "finThickness" "lugSurfaceArea" "emptyMass" "emptyInertia" "emptyCenterOfMass" "airbrakePosition" "airbrakeAngle" ... 
+        "payloadMass" "mainParachuteDragArea" "drogueParachuteDragArea" "mainParachuteDeploymentAltitude" "interMotorDistance" "motor_diaP" ...
         "motor_lengthP" "propel_massP" "motor_massP" "motor_diaF" "motor_lengthF" "propel_massF" ...
-        "motor_massF" "burnTime" "T1" "T2" "Temperature_Ground" "Pressure_Ground" "Humidity_Ground"  ... 
-        "Start_Altitude" "dTdh" "Rail_Length" "Rail_Angle" "Rail_Azimuth"...
+        "motor_massF" "burnTime" "railTime" "flightTime" "groundTemperature" "groundPressure" "groundHumidity"  ... 
+        "startAltitude" "dTdh" "railLength" "railAngle" "railAzimuth"...
         "Vi1" "Vi2" "Vi3" "Vi4" "Vi5" "Vi6" "ai1" "ai2" "ai3" "ai4" "ai5" "ai6"]';
     
 
 %Less inputs for debugging
-%Xid = [ "dmin" "dd" "z1" "z12" "z23" "fin_xt"]'; 
+%Xid = [ "dmin" "dd" "z1" "z12" "z23" "finRootPosition"]'; 
 
 
 % Base input values
 Rocket = rocketReader('BL2_H3.txt'); 
 Environment = environnementReader('Environment/Environnement_Definition_SA.txt'); %with exactly 6 windlayers
-SimOutputs = SimOutputReader('Simulation/Simulation_outputs.txt');
+simulationOutputs = SimOutputReader('Simulation/Simulation_outputs.txt');
  
 % Base simulator object
-SimObj = multilayerwindSimulator3D(Rocket, Environment, SimOutputs);
+simulatior3D = multilayerwindSimulator3D(Rocket, Environment, simulationOutputs);
 
 %% Creating the samples
-XX = baseValues(SimObj, Xid, sigma);
+XX = baseValues(simulatior3D, Xid, sigma);
 k = length(Xid);
 
 rng = rand(k, N);
@@ -51,38 +51,38 @@ X = rng.*(XX(:,3) - XX(:,2)) + XX(:,2);
 
 %% ode45
 
-SimObj = multilayerwindSimulator3D_ode45(Rocket, Environment, SimOutputs);
-[Y_45, t_45] = SimAPI_NS(SimObj, Xid, X);
+simulatior3D = multilayerwindSimulator3D_ode45(Rocket, Environment, simulationOutputs);
+[Y_45, t_45] = SimAPI_NS(simulatior3D, Xid, X);
 
 %% ode23
 
-SimObj = multilayerwindSimulator3D_ode23(Rocket, Environment, SimOutputs);
-[Y_23, t_23] = SimAPI_NS(SimObj, Xid, X);
+simulatior3D = multilayerwindSimulator3D_ode23(Rocket, Environment, simulationOutputs);
+[Y_23, t_23] = SimAPI_NS(simulatior3D, Xid, X);
 
 %% ode113
 
-SimObj = multilayerwindSimulator3D_ode113(Rocket, Environment, SimOutputs);
-[Y_113, t_113] = SimAPI_NS(SimObj, Xid, X);
+simulatior3D = multilayerwindSimulator3D_ode113(Rocket, Environment, simulationOutputs);
+[Y_113, t_113] = SimAPI_NS(simulatior3D, Xid, X);
 
 %% ode15s
 
-SimObj = multilayerwindSimulator3D_ode15s(Rocket, Environment, SimOutputs);
-[Y_15s, t_15s] = SimAPI_NS(SimObj, Xid, X);
+simulatior3D = multilayerwindSimulator3D_ode15s(Rocket, Environment, simulationOutputs);
+[Y_15s, t_15s] = SimAPI_NS(simulatior3D, Xid, X);
 
 %% ode23s
 
-SimObj = multilayerwindSimulator3D_ode23s(Rocket, Environment, SimOutputs);
-[Y_23s, t_23s] = SimAPI_NS(SimObj, Xid, X);
+simulatior3D = multilayerwindSimulator3D_ode23s(Rocket, Environment, simulationOutputs);
+[Y_23s, t_23s] = SimAPI_NS(simulatior3D, Xid, X);
 
 %% ode23t
 
-SimObj = multilayerwindSimulator3D_ode23t(Rocket, Environment, SimOutputs);
-[Y_23t, t_23t] = SimAPI_NS(SimObj, Xid, X);
+simulatior3D = multilayerwindSimulator3D_ode23t(Rocket, Environment, simulationOutputs);
+[Y_23t, t_23t] = SimAPI_NS(simulatior3D, Xid, X);
 
 %% ode23tb
 
-SimObj = multilayerwindSimulator3D_ode23tb(Rocket, Environment, SimOutputs);
-[Y_23tb, t_23tb] = SimAPI_NS(SimObj, Xid, X);
+simulatior3D = multilayerwindSimulator3D_ode23tb(Rocket, Environment, simulationOutputs);
+[Y_23tb, t_23tb] = SimAPI_NS(simulatior3D, Xid, X);
 
 
 %% Save outputs

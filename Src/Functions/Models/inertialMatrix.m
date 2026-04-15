@@ -1,5 +1,3 @@
-
-
 function I = inertialMatrix(rocket, Cm, t)
     if t < rocket.burnTime
         % Find position of the CM of the propelant 
@@ -16,7 +14,7 @@ function I = inertialMatrix(rocket, Cm, t)
             inertialFillCylinder(propelantMass, zPropel, rocket.tankR);% + ...
             %huygensSteinerMatrix(propelantMass, 0, 0, deltaZ);
     else
-        I = rocket.rocketInertia;
+        I = rocket.emptyInertia;
     end
 end
 
