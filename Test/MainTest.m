@@ -58,7 +58,7 @@ classdef MainTest < matlab.unittest.TestCase
                 Rocket = rocketReader(rocketFile);
                 testCase.verifyTrue(isstruct(Rocket), 'Rocket should be a struct');
                 testCase.verifyTrue(isfield(Rocket, 'motorState'), 'Rocket should have motorState field');
-                testCase.verifyTrue(isfield(Rocket, 'Burn_Time'), 'Rocket should have Burn_Time field');
+                testCase.verifyTrue(isfield(Rocket, 'burnTime'), 'Rocket should have burnTime field');
             catch ME
                 testCase.verifyFail(sprintf('Failed to load rocket: %s', ME.message));
             end
@@ -165,7 +165,7 @@ classdef MainTest < matlab.unittest.TestCase
             requiredFields = {
                 'motorState', 'numStages', 'stageDiameters', 'stagePositions', ...
                 'numFins', 'finSpan', 'finRootChord', 'finTipChord', 'emptyMass', ...
-                'emptyInertia', 'emptyCenterOfMass', 'maxDiameter', 'motorId', 'Burn_Time'
+                'emptyInertia', 'emptyCenterOfMass', 'maxDiameter', 'motorId', 'burnTime'
             };
             
             for i = 1:length(requiredFields)
@@ -178,7 +178,7 @@ classdef MainTest < matlab.unittest.TestCase
             testCase.verifyTrue(ischar(Rocket.motorState), 'Rocket.motorState should be string');
             testCase.verifyTrue(Rocket.emptyMass > 0, 'Rocket.emptyMass should be positive');
             testCase.verifyTrue(Rocket.emptyCenterOfMass >= 0, 'Rocket.emptyCenterOfMass should be non-negative');
-            testCase.verifyGreaterThan(Rocket.Burn_Time(end), 0, 'Burn_Time should be positive');
+            testCase.verifyGreaterThan(Rocket.burnTime(end), 0, 'burnTime should be positive');
         end
         
         function testEnvironmentHasRequiredFields(testCase)

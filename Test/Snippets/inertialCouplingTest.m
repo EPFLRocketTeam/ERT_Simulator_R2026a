@@ -82,11 +82,11 @@ classdef inertialCouplingTest < matlab.unittest.TestCase
             % Test that the entire inertial coupling script runs without errors
             % This test just verifies the script executes without crashing
             
-            fprintf('\n=== Testing inertial_coupling.m ===\n');
+            fprintf('\n=== Testing inertialCoupling.m ===\n');
             
             try
                 % Run the script and capture any output/errors
-                [~, ~] = evalc('inertial_coupling');
+                [~, ~] = evalc('inertialCoupling');
                 
                 % If we get here, the script ran without errors
                 testCase.verifyTrue(true, 'Script executed without errors');
@@ -113,7 +113,7 @@ classdef inertialCouplingTest < matlab.unittest.TestCase
             fprintf('\n=== Testing short simulation ===\n');
             
             % Temporarily modify the script parameters for faster testing
-            originalScript = fileread('inertial_coupling.m');
+            originalScript = fileread('inertialCoupling.m');
             
             % Modify the simulation time to be very short for testing
             modifiedScript = strrep(originalScript, 't_simu = 20;', 't_simu = 0.1;');
@@ -236,7 +236,7 @@ classdef inertialCouplingTest < matlab.unittest.TestCase
             
             % We'll run a very short simulation and check outputs exist
             
-            originalScript = fileread('inertial_coupling.m');
+            originalScript = fileread('inertialCoupling.m');
             
             % Create a minimal test version
             testScript = [
@@ -380,7 +380,7 @@ classdef inertialCouplingTest < matlab.unittest.TestCase
             
             try
                 % Modify script for faster but complete test
-                originalScript = fileread('inertial_coupling.m');
+                originalScript = fileread('inertialCoupling.m');
                 
                 % Make modifications for test:
                 % 1. Shorter simulation time

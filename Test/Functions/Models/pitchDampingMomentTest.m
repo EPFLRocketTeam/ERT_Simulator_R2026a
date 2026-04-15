@@ -45,7 +45,7 @@ classdef pitchDampingMomentTest < matlab.unittest.TestCase
         function createRocket(testCase)
             % Create a standard test rocket
             testCase.testRocket = struct(...
-                'totalLength', 2.0, ... % meters
+                'length', 2.0, ... % meters
                 'maxCrossSectionArea', pi*0.1^2, ... % m^2
                 'stagePositions', [0, 0.2, 0.5, 0.8, 2.0], ...
                 'numFins', 3, ...
@@ -130,7 +130,7 @@ classdef pitchDampingMomentTest < matlab.unittest.TestCase
             CNa_Total = sum(testCase.testCalpha .* (testCase.testCP - testCase.testCM).^2);
             CDM_aero = CNa_Total * testCase.testW / testCase.testV;
             
-            CDM_thrust = dMdt * (testCase.testRocket.totalLength - testCase.testCM)^2 * ...
+            CDM_thrust = dMdt * (testCase.testRocket.length - testCase.testCM)^2 * ...
                 testCase.testW * 2 / testCase.testV^2 / testCase.testRho / ...
                 testCase.testRocket.maxCrossSectionArea;
             
@@ -247,7 +247,7 @@ classdef pitchDampingMomentTest < matlab.unittest.TestCase
         end
         
         function testThrustDampingMomentArm(testCase)
-            % Test thrust damping scaling with moment arm (totalLength - CM)
+            % Test thrust damping scaling with moment arm (length - CM)
             Calpha_small = [1e-6, 1e-6, 1e-6];
             dMdt = 10;
             
@@ -261,8 +261,8 @@ classdef pitchDampingMomentTest < matlab.unittest.TestCase
                     CM_positions(i), testCase.testW, testCase.testV);
             end
             
-            % Should scale with (totalLength - CM)^2
-            moment_arms = testCase.testRocket.totalLength - CM_positions;
+            % Should scale with (length - CM)^2
+            moment_arms = testCase.testRocket.length - CM_positions;
             for i = 2:length(CM_positions)
                 ratio = CDM_results(i) / CDM_results(1);
                 expected_ratio = (moment_arms(i)^2) / (moment_arms(1)^2);
@@ -412,7 +412,7 @@ classdef pitchDampingMomentTest < matlab.unittest.TestCase
             expected_aero = -CNa_Total * testCase.testW / testCase.testV;
             
             expected_thrust = testCase.testdMdt * ...
-                (testCase.testRocket.totalLength - testCase.testCM)^2 * ...
+                (testCase.testRocket.length - testCase.testCM)^2 * ...
                 testCase.testW * 2 / testCase.testV^2 / testCase.testRho / ...
                 testCase.testRocket.maxCrossSectionArea;
             

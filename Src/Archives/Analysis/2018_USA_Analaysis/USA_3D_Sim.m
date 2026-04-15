@@ -25,7 +25,7 @@ display(['Launch rail departure velocity : ' num2str(railState(end,2))]);
 %% ------------------------------------------------------------------------
 % 6DOF Boost Simulation
 %--------------------------------------------------------------------------
-[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.Thrust_Time(end)], railState(end,2));
+[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.thrustTime(end)], railState(end,2));
 
 %% ------------------------------------------------------------------------
 % 6DOF Boost Simulation

@@ -37,7 +37,7 @@ simulatior3D = Simulator3D(Rocket, Environment, simulationOutputs);
 % 6DOF Flight Simulation
 %--------------------------------------------------------------------------
 
-[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.Burn_Time(end)], railState(end, 2));
+[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.burnTime(end)], railState(end, 2));
 
 [coastTime, coastState, coastTimeEvents, coastStateEvents, coastEventIndices] = simulatior3D.FlightSim([flightTime(end) 40], flightState(end, 1:3)', flightState(end, 4:6)', flightState(end, 7:10)', flightState(end, 11:13)');
 
@@ -262,7 +262,7 @@ simulatior3D = Simulator3D(Rocket, Environment, simulationOutputs);
 % 6DOF Flight Simulation
 %--------------------------------------------------------------------------
 
-[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.Burn_Time(end)], V);
+[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.burnTime(end)], V);
 
 [coastTime, coastState, coastTimeEvents, coastStateEvents, coastEventIndices] = simulatior3D.FlightSim([flightTime(end) 40], flightState(end, 1:3)', flightState(end, 4:6)', flightState(end, 7:10)', flightState(end, 11:13)');
 

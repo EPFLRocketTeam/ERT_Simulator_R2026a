@@ -9,11 +9,11 @@ function [mass,dmassdt] = massLin(t,Rocket)
 
 % OUTPUT:
 if t > Rocket.burnTime
-    mass = Rocket.emptyMass + Rocket.casing_mass;
+    mass = Rocket.emptyMass + Rocket.casingMass;
     dmassdt = 0;
 else
     dmassdt = Rocket.propelMass/Rocket.burnTime;
-    mass = Rocket.emptyMass+Rocket.motor_mass-t*dmassdt;
+    mass = Rocket.emptyMass+Rocket.motorMass-t*dmassdt;
 end
 end
 

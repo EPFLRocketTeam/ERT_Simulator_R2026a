@@ -16,7 +16,7 @@ function C2 = dampingMoment(t,Rocket,Calpha,CP,Velocity,Environnement,Altitude)
 <<<<<<< HEAD:Src/Snippets/dampingMoment.m
 CR2 = dMdt*(Rocket.length-Cm).^2;
 =======
-CR2 = dMdt*(Rocket.totalLength-Cm).^2;
+CR2 = dMdt*(Rocket.length-Cm).^2;
 >>>>>>> 8b6ece1c1c992ed5647f16054d68fd8a78b3021c:Src/Snippets/DampingMoment.m
 
 %2.2 Aerodynamic damping coefficient

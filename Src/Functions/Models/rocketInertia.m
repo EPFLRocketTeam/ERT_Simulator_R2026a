@@ -29,13 +29,13 @@ CM = (Rocket.emptyCenterOfMass*Rocket.emptyMass + ...
 R_i = 0.005; % Diametre interieur grains (Tjr identique)
 R_e = Rocket.motor_dia/2; % Diametre exterieur grains
 
-I_L_Casing = Rocket.casing_mass*(Rocket.motorLength^2/12 + R_e^2/2); 
+I_L_Casing = Rocket.casingMass*(Rocket.motorLength^2/12 + R_e^2/2); 
 
-Grain_Mass = M-Rocket.emptyMass-Rocket.casing_mass; % Masse des grains
+Grain_Mass = M-Rocket.emptyMass-Rocket.casingMass; % Masse des grains
 I_L_Grain = Grain_Mass*(Rocket.motorLength^2/12 + (R_e^2+R_i^2)/4);
 
-I_L = Rocket.rocket_I + I_L_Casing + I_L_Grain + ...
-    (Grain_Mass+Rocket.casing_mass)*...
+I_L = Rocket.emptyInertia + I_L_Casing + I_L_Grain + ...
+    (Grain_Mass+Rocket.casingMass)*...
     (Rocket.length-CM-Rocket.motorLength/2); % I + ... + Steiner
 % rotational inertia
 

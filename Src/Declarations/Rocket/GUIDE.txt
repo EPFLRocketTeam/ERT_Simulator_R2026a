@@ -1,7 +1,7 @@
 Alors:
 stages :nombre de fois que la fusée change de diametre (donc le nez, le bout du nozecone, le début du boat tail, la fin du boattail)
 diameters: les diametres des 4 éléments nommé au dessus
-stage_z  :la distance entre chaque élément nommé au dessus
+stagePositions  :la distance entre chaque élément nommé au dessus
 fin_n : nombre d'ailerons
 fin_xt : distance début aileron-nez de la fusée
 fin_s : hauteur des ailerons (donc pas selon l'axe z) autrement dit longueur bout des ailerons-corps de la fusée
@@ -12,7 +12,7 @@ fin_t : epaisseur des ailerons (j'ai un shépa si jamais si c'est pas clair pour
 lug_n : nombre de lunch lugs
 lug_S : surface de référence d'un lunch lugs
 emptyMass : masse de la fusée sans moteur
-rocket_I : inertie selon l'axe x et y de la fusée sans moteur
+emptyInertia : inertie selon l'axe x et y de la fusée sans moteur
 emptyCenterOfMass : centre de masse de la fusée sans moteur
 ab_x : distance airbrakes-nez de la fusée
 ab_n : nomre d'airbrakes

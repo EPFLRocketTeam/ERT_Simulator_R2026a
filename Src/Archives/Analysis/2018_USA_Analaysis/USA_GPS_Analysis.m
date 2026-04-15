@@ -74,7 +74,7 @@ display(['Launch rail departure velocity : ' num2str(railState(end,2))]);
 % ------------------------------------------------------------------------
 % 6DOF Boost Simulation
 %--------------------------------------------------------------------------
-[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.Thrust_Time(end)], railState(end,2));
+[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.thrustTime(end)], railState(end,2));
 
 SimX = (R*flightState(:,1:3)')';
 
@@ -92,7 +92,7 @@ n = cross(initialVelocity, [0;0;1]); n = n/norm(n);
 initialQuaternion = [n*sin(phi/2); cos(phi/2)];
 W = [0, 0, 0]';
 
-[coastTime, coastState, coastTimeEvents, coastStateEvents, coastEventIndices] = simulatior3D.FlightSim([simulatior3D.Rocket.Thrust_Time 40],...
+[coastTime, coastState, coastTimeEvents, coastStateEvents, coastEventIndices] = simulatior3D.FlightSim([simulatior3D.Rocket.thrustTime 40],...
     [gps_x(end), gps_y(end), gps_h(end)]',...
     initialVelocity,...
     initialQuaternion,...

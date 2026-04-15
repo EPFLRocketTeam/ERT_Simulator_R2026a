@@ -38,8 +38,8 @@ function Value = drag_transonic(Rocket, alpha, Uinf, nu, a)
     M = Uinf/a; % Mach number
     
     % Geometry of the rocket (inches, deg)
-    L = Rocket.stage_z(end);% * 39.3701;                 % Lenght of the rocket
-    Ln = Rocket.stage_z(2);% * 39.3701;     % Length of the rocket's nose
+    L = Rocket.stagePositions(end);% * 39.3701;                 % Lenght of the rocket
+    Ln = Rocket.stagePositions(2);% * 39.3701;     % Length of the rocket's nose
     d = Rocket.dm;% * 39.3701;           % Maximum rocket diameter
     r = d / 2;                                       % Maximum rocket radius
     db = Rocket.diameters(end);% * 39.3701;             % Base diameter of rocket at aft end

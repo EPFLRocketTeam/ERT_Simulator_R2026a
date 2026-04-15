@@ -23,12 +23,12 @@ Airframe_Length_in = Rocket.length * m_to_in;
 Airframe_Diameter_in = Rocket.maxDiameter * m_to_in;
 Fin_span_in = Rocket.finSpan * m_to_in;
 % LV weight with casing and without payload
-Vehicle_wieght_lbs = (Rocket.emptyMass + Rocket.casing_mass - Payload_mass) * kg_to_lbs;
-Propellant_weight_lbs = Rocket.propel_mass * kg_to_lbs;
+Vehicle_wieght_lbs = (Rocket.emptyMass + Rocket.casingMass - Payload_mass) * kg_to_lbs;
+Propellant_weight_lbs = Rocket.propelMass * kg_to_lbs;
 Payload_weight_lbs = Payload_mass * kg_to_lbs;
 % Sum below is identical to un-commented calculation
 % Liftoff_weight_lbs = Vehicle_wieght_lbs + Propellant_weight_lbs + Payload_weight_lbs;
-Liftoff_weight_lbs = (Rocket.emptyMass + Rocket.motor_mass) * kg_to_lbs;
+Liftoff_weight_lbs = (Rocket.emptyMass + Rocket.motorMass) * kg_to_lbs;
 
 emptyInertianformation = [Airframe_Length_in;
     Airframe_Diameter_in;
@@ -66,7 +66,7 @@ warning('off','all')
 % 6DOF Flight Simulation
 %--------------------------------------------------------------------------
 
-[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.Burn_Time(end)], railState(end, 2));
+[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.burnTime(end)], railState(end, 2));
 
 %simulatior3D.Rocket.coneMode = 'off';
 
@@ -82,7 +82,7 @@ m_to_feet = 3.2808399;
 % Results
 
 % Considering peak thrust at liftoff
-Liftoff_thrust_to_weight_ratio = max(Rocket.Thrust_Force) / ((Rocket.emptyMass + Rocket.motor_mass) * g0);
+Liftoff_thrust_to_weight_ratio = max(Rocket.thrustForce) / ((Rocket.emptyMass + Rocket.motorMass) * g0);
 Launch_rail_departure_velocity_ft = railState(end,2) * m_to_feet;
 
 Stability = (simulatior3D.simAuxResults.centerOfPressure - simulatior3D.simAuxResults.centerOfMass)./Rocket.maxDiameter;

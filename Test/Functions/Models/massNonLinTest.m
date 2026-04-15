@@ -3,6 +3,7 @@ classdef massNonLinTest < matlab.unittest.TestCase
 
     properties
         AbsTol = 1e-10;
+        AddedPath
     end
 
     methods (Test)
@@ -18,9 +19,9 @@ classdef massNonLinTest < matlab.unittest.TestCase
             [M,dMdt] = massNonLin(t,R);
 
             tt = linspace(0,t,500);
-            Current_Impulse = trapz(tt,Thrust(tt,R));
-            exp_M = R.emptyMass + R.motor_mass - R.Thrust2dMass_Ratio*Current_Impulse;
-            exp_dMdt = R.Thrust2dMass_Ratio*Thrust(t,R);
+            currentImpulse = trapz(tt,Thrust(tt,R));
+            exp_M = R.emptyMass + R.motorMass - R.thrust2dMassRatio*currentImpulse;
+            exp_dMdt = R.thrust2dMassRatio*Thrust(t,R);
 
             testCase.verifyEqual(dMdt,exp_dMdt,'AbsTol',testCase.AbsTol);
             testCase.verifyEqual(M,exp_M,'AbsTol',testCase.AbsTol);
@@ -33,7 +34,7 @@ classdef massNonLinTest < matlab.unittest.TestCase
 
             [M,dMdt] = massNonLin(t,R);
 
-            exp_M = R.emptyMass + R.motor_mass - R.propelMass;
+            exp_M = R.emptyMass + R.motorMass - R.propelMass;
 
             testCase.verifyEqual(M,exp_M,'AbsTol',testCase.AbsTol);
             testCase.verifyEqual(dMdt,0,'AbsTol',testCase.AbsTol);
@@ -50,7 +51,7 @@ classdef massNonLinTest < matlab.unittest.TestCase
 
             [M,dMdt] = massNonLin(t,R,'NonLinear');
 
-            exp_M = R.emptyMass + R.casing_mass;
+            exp_M = R.emptyMass + R.casingMass;
 
             testCase.verifyEqual(M,exp_M,'AbsTol',testCase.AbsTol);
             testCase.verifyEqual(dMdt,0,'AbsTol',testCase.AbsTol);
@@ -82,14 +83,14 @@ function R = rocketNonHybrid()
     R.propelMass = 10;
     R.burnTime = 5;
     R.emptyMass = 50;
-    R.motor_mass = 20;
-    R.casing_mass = 5;
+    R.motorMass = 20;
+    R.casingMass = 5;
     R.emptyCenterOfMass = 1.0;
     R.motor_length = 0.4;
     R.motor_dia = 0.12;
     R.L = 2.5;
-    R.rocket_I = 0.3;
-    R.Thrust2dMass_Ratio = 0.02;
+    R.emptyInertia = 0.3;
+    R.thrust2dMassRatio = 0.02;
 end
 
 function R = rocketHybrid()
@@ -97,21 +98,21 @@ function R = rocketHybrid()
     R.propelMass = 8;
     R.burnTime = 6;
     R.emptyMass = 55;
-    R.casing_mass = 4;
-    R.motor_mass = 18;
+    R.casingMass = 4;
+    R.motorMass = 18;
     R.emptyCenterOfMass = 1.0;
     R.motor_length = 0.45;
-    R.motor_lengthP = 0.25;
-    R.motor_lengthF = 0.15;
+    R.motorLengthPropel = 0.25;
+    R.motorLengthFuel = 0.15;
     R.motor_massP = 10;
     R.motor_massF = 8;
-    R.propel_massP = 4;
-    R.propel_massF = 4;
-    R.intermotor_d = 0.02;
+    R.massPropel = 4;
+    R.massFuel = 4;
+    R.distanceInterMotors = 0.02;
     R.motor_dia = 0.11;
     R.L = 2.6;
-    R.rocket_I = 0.25;
-    R.Thrust2dMass_Ratio = 0.02;
+    R.emptyInertia = 0.25;
+    R.thrust2dMassRatio = 0.02;
 end
 
 %% ========================================================================

@@ -21,11 +21,11 @@ classdef Simulator3DTest < matlab.unittest.TestCase
         function createTestComponents(testCase)
             % Create test components
             testCase.TestRocket = struct();
-            testCase.TestRocket.Burn_Time = 5;
+            testCase.TestRocket.burnTime = 5;
             testCase.TestRocket.rocket_m = 50;
-            testCase.TestRocket.motor_mass = 10;
-            testCase.TestRocket.propel_mass = 8;
-            testCase.TestRocket.casing_mass = 2;
+            testCase.TestRocket.motorMass = 10;
+            testCase.TestRocket.propelMass = 8;
+            testCase.TestRocket.casingMass = 2;
             testCase.TestRocket.rocket_cm = 1.2;
             testCase.TestRocket.L = 2.0;
             testCase.TestRocket.motor_length = 0.5;
@@ -44,9 +44,9 @@ classdef Simulator3DTest < matlab.unittest.TestCase
             testCase.TestRocket.CNa_fac = 1.0;
             
             % Mock thrust curve
-            testCase.TestRocket.Thrust_Time = [0, 2.5, 5];
-            testCase.TestRocket.Thrust_Force = [0, 2000, 0];
-            testCase.TestRocket.Thrust2dMass_Ratio = 0.001;
+            testCase.TestRocket.thrustTime = [0, 2.5, 5];
+            testCase.TestRocket.thrustForce = [0, 2000, 0];
+            testCase.TestRocket.thrust2dMassRatio = 0.001;
             
             % Create test environment
             testCase.TestEnvironment = struct();

@@ -15,20 +15,20 @@ function [I_L,dI_Ldt,I_R] = Inertia(t,Rocket)
 R_i = 0.005; % Diametre interieur grains (Tjr identique)
 R_e = Rocket.motor_dia/2; % Diametre exterieur grains
 
-I_L_Casing = Rocket.casing_mass*(Rocket.motorLength^2/12 + R_e^2/2); 
+I_L_Casing = Rocket.casingMass*(Rocket.motorLength^2/12 + R_e^2/2); 
 
-Grain_Mass = M-Rocket.emptyMass-Rocket.casing_mass; % Masse des grains
+Grain_Mass = M-Rocket.emptyMass-Rocket.casingMass; % Masse des grains
 I_L_Grain = Grain_Mass*(Rocket.motorLength^2/12 + (R_e^2+R_i^2)/4);
 
 I_L = Rocket.emptyInertia + I_L_Casing + I_L_Grain + ...
-    (Grain_Mass+Rocket.casing_mass)*...
+    (Grain_Mass+Rocket.casingMass)*...
     (Rocket.length-cm-Rocket.motorLength/2)^2; % I + ... + Steiner
 
 % dI_L/dt:
 dI_L_Grain = dMdt*(Rocket.motorLength^2/12 + (R_e^2+R_i^2)/4);
 
 dI_Ldt = dI_L_Grain+dMdt*(Rocket.length-cm-Rocket.motorLength/2)^2+...
-    2*(Grain_Mass+Rocket.casing_mass)*(Rocket.length-cm-Rocket.motorLength/2)*...
+    2*(Grain_Mass+Rocket.casingMass)*(Rocket.length-cm-Rocket.motorLength/2)*...
     dcmdt;
 
 % I_R:

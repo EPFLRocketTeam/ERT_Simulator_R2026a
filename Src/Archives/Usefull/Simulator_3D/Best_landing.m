@@ -56,7 +56,7 @@ Environment = setfield(Environment, 'railAzimuth', azimuth_i/180*pi);
 
 simulatior3D = multilayerwindSimulator3D(Rocket_0, Environment, simulationOutputs);
 [railTime, railState] = simulatior3D.RailSim();
-[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.Burn_Time(end)], railState(end, 2));
+[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.burnTime(end)], railState(end, 2));
 [coastTime, coastState, coastTimeEvents, coastStateEvents, coastEventIndices] = simulatior3D.FlightSim([flightTime(end) 40], flightState(end, 1:3)', flightState(end, 4:6)', flightState(end, 7:10)', flightState(end, 11:13)');
 flightTime = [flightTime; coastTime(2:end)];
 flightState = [flightState; coastState(2:end, :)];

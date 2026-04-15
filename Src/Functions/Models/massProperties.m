@@ -122,18 +122,18 @@ else
 %--------------------------------------------------------------------------
 % Centre de masse
 
-motorCenterOfMass = (Rocket.totalLength - Rocket.motorLengthPropel/2 )* (Rocket.motorMassPropel - t*(Rocket.massPropel/Rocket.burnTime));
-motorCenterOfMassFuel = (Rocket.totalLength - Rocket.motorLengthFuel/2 -Rocket.motorLengthPropel - Rocket.interMotorDistance )* (Rocket.motorMassFuel - t*(Rocket.massFuel/Rocket.burnTime));
+motorCenterOfMass = (Rocket.length - Rocket.motorLengthPropel/2 )* (Rocket.motorMassPropel - t*(Rocket.massPropel/Rocket.burnTime));
+motorCenterOfMassFuel = (Rocket.length - Rocket.motorLengthFuel/2 -Rocket.motorLengthPropel - Rocket.distanceInterMotors )* (Rocket.motorMassFuel - t*(Rocket.massFuel/Rocket.burnTime));
 % Centre de masse
 
 Cm = (Rocket.emptyCenterOfMass*Rocket.emptyMass +  motorCenterOfMass + motorCenterOfMassFuel )/M;
 % D?riv?e centre de masse
-%dcmdtn = (dMdt*(Rocket.totalLength-Rocket.motorLength)-dMdt*Cm)/M;
+%dcmdtn = (dMdt*(Rocket.length-Rocket.motorLength)-dMdt*Cm)/M;
 
-%Cm =(Rocket.emptyCenterOfMass*Rocket.emptyMass +  (M-Rocket.emptyMass)*(Rocket.totalLength-Rocket.motorLength/2))/M;
+%Cm =(Rocket.emptyCenterOfMass*Rocket.emptyMass +  (M-Rocket.emptyMass)*(Rocket.length-Rocket.motorLength/2))/M;
  
 % Derivee centre de masse
-dCmdt = (dMdt*(Rocket.totalLength-(Rocket.motorLength+Rocket.motorLengthFuel + Rocket.interMotorDistance))/2-dMdt*Cm)/M;
+dCmdt = (dMdt*(Rocket.length-(Rocket.motorLength+Rocket.motorLengthFuel + Rocket.distanceInterMotors))/2-dMdt*Cm)/M;
 
 %--------------------------------------------------------------------------
 % Moment of Inertia

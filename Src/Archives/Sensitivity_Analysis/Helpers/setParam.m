@@ -65,9 +65,9 @@ for i=1:k
         case "z23"
             z13 = X(i);
         case "T1"
-            SimObj.Rocket.Thrust_Force(2) = X(i); 
+            SimObj.Rocket.thrustForce(2) = X(i); 
         case "T2"
-            SimObj.Rocket.Thrust_Force(3) = X(i); 
+            SimObj.Rocket.thrustForce(3) = X(i); 
         case "Vi1"
             layerspeed(1) = X(i);
             isChanged_Vi = true;
@@ -106,7 +106,7 @@ for i=1:k
             isChanged_ai = true;
         case "burnTime"
             SimObj.Rocket.burnTime = X(i);
-            simulatior3D.Rocket.Thrust_Time =  X(i) * Thrust_Time_NV;
+            simulatior3D.Rocket.thrustTime =  X(i) * Thrust_Time_NV;
         otherwise
             if ismember(id, rocketparamIDs)
                 simulatior3D.Rocket.(id) = X(i);
@@ -119,7 +119,7 @@ for i=1:k
 end
 
 if nz_param == 3
-    SimObj.Rocket.stage_z = [0, z1, z1 + z12, z1 + z12 + z13];
+    SimObj.Rocket.stagePositions = [0, z1, z1 + z12, z1 + z12 + z13];
 end
 
 if nd_param == 2
@@ -151,23 +151,23 @@ SimObj.Rocket.fin_df = SimObj.Rocket.dm;
 % 4.6 Virtual fin planform area
 SimObj.Rocket.fin_SF = SimObj.Rocket.fin_SE + 1/2*SimObj.Rocket.fin_df*SimObj.Rocket.fin_cr; 
 % 4.8 Rocket Length
-SimObj.Rocket.length = SimObj.Rocket.stage_z(end);
+SimObj.Rocket.length = SimObj.Rocket.stagePositions(end);
 % Saturation Vapor Ration
 p_ws = exp(77.345+0.0057*SimObj.Environment.Temperature_Ground-7235/SimObj.Environment.Temperature_Ground)/SimObj.Environment.Temperature_Ground^8.2;
 p_a = SimObj.Environment.Pressure_Ground;
 SimObj.Environment.Saturation_Vapor_Ratio = 0.62198*p_ws/(p_a-p_ws);
 % Casing masses
-SimObj.Rocket.casing_massP = SimObj.Rocket.motor_massP-SimObj.Rocket.propel_massP;
-SimObj.Rocket.casing_massF = SimObj.Rocket.motor_massF-SimObj.Rocket.propel_massF;
+SimObj.Rocket.casing_massP = SimObj.Rocket.motor_massP-SimObj.Rocket.massPropel;
+SimObj.Rocket.casing_massF = SimObj.Rocket.motor_massF-SimObj.Rocket.massFuel;
 %Global motor info
 SimObj.Rocket.motor_dia = max(SimObj.Rocket.motor_diaP, SimObj.Rocket.motor_diaF);
-SimObj.Rocket.motorLength = SimObj.Rocket.motor_lengthP + SimObj.Rocket.motor_lengthF + SimObj.Rocket.intermotor_d ;
-SimObj.Rocket.propelMass = SimObj.Rocket.propel_massP + SimObj.Rocket.propel_massF ;
-SimObj.Rocket.motor_mass = SimObj.Rocket.motor_massP + SimObj.Rocket.motor_massF; 
-SimObj.Rocket.casing_mass = SimObj.Rocket.casing_massP + SimObj.Rocket.casing_massF ;
+SimObj.Rocket.motorLength = SimObj.Rocket.motorLengthPropel + SimObj.Rocket.motorLengthFuel + SimObj.Rocket.distanceInterMotors ;
+SimObj.Rocket.propelMass = SimObj.Rocket.massPropel + SimObj.Rocket.massFuel ;
+SimObj.Rocket.motorMass = SimObj.Rocket.motor_massP + SimObj.Rocket.motor_massF; 
+SimObj.Rocket.casingMass = SimObj.Rocket.casing_massP + SimObj.Rocket.casing_massF ;
 % Mass variation coefficient
-A_T = trapz(SimObj.Rocket.Thrust_Time, SimObj.Rocket.Thrust_Force);
-SimObj.Rocket.Thrust2dMass_Ratio = SimObj.Rocket.propelMass/(A_T);
+A_T = trapz(SimObj.Rocket.thrustTime, SimObj.Rocket.thrustForce);
+SimObj.Rocket.thrust2dMassRatio = SimObj.Rocket.propelMass/(A_T);
 
 
 end

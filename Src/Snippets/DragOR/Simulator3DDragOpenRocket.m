@@ -45,17 +45,17 @@ classdef Simulator3DDragOpenRocket < handle
                obj.environment = environment;
                
                %Extract drag coefficients computed by OpenRocket
-               dragOR = readtable(drag,'Format','%state%state%state%state');
+               dragOpenRocket = readtable(drag,'Format','%state%state%state%state');
 
-               indexStart = find(contains(dragOR{:,1},'# Event LIFTOFF'));
-               indexEnd = find(contains(dragOR{:,1},'# Event APOGEE'));
+               indexStart = find(contains(dragOpenRocket{:,1},'# Event LIFTOFF'));
+               indexEnd = find(contains(dragOpenRocket{:,1},'# Event APOGEE'));
 
-               dragOR = dragOR{indexStart:indexEnd,:};
+               dragOpenRocket = dragOpenRocket{indexStart:indexEnd,:};
 
-               removeIndex = find(contains(dragOR(:,1),"Event"));
-               dragOR(removeIndex,:) = [];
-               dragOR = str2double(dragOR);
-               obj.drag = dragOR;
+               removeIndex = find(contains(dragOpenRocket(:,1),"Event"));
+               dragOpenRocket(removeIndex,:) = [];
+               dragOpenRocket = str2double(dragOpenRocket);
+               obj.drag = dragOpenRocket;
                
                obj.interpType = interpType;
                obj.simOutput = simOutput;

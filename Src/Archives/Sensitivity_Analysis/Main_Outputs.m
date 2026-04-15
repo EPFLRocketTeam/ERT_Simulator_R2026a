@@ -68,7 +68,7 @@ xline(T2(end),  '-', {'Apogee'}, 'LabelVerticalAlignment', 'middle', 'LabelHoriz
 =======
 title 'Stability stabilityMargin'
 xline(flightTime(1), '-', {'End of Rail'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'green', 'lineWidth', 1.2, 'DisplayName', 'End of Rail');
-xline(simulatior3D.Rocket.Burn_Time,  '-', {'End of Propulsion'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'red', 'lineWidth', 1.2, 'DisplayName', 'End of Propulsion');
+xline(simulatior3D.Rocket.burnTime,  '-', {'End of Propulsion'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'red', 'lineWidth', 1.2, 'DisplayName', 'End of Propulsion');
 xline(flightTime(end),  '-', {'Apogee'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'magenta', 'lineWidth', 1.2, 'DisplayName', 'Apogee');
 >>>>>>> 8b6ece1c1c992ed5647f16054d68fd8a78b3021c
 legend show;

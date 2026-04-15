@@ -1,6 +1,6 @@
 stages 4
 diameters 0 0.156 0.156 0.135
-stage_z 0 0.242 3.43 3.51
+stagePositions 0 0.242 3.43 3.51
 fin_n 4
 fin_xt 3.15
 fin_s 0.14
@@ -11,7 +11,7 @@ fin_t 0.004
 lug_n 2
 lug_S 1.81e-4
 emptyMass 29.88
-rocket_I 39
+emptyInertia 39
 emptyCenterOfMass 1.77
 ab_x 314
 ab_n 0

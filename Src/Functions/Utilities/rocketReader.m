@@ -37,9 +37,9 @@ while ~feof(rfid)
         % List containing as many numbers as defined by the 'stages' 
         % parameter. Each number indicates the position from the rocket's
         % tip of the diameter change
-        case 'stage_z'
+        case 'stagePositions'
             line_data_num = textscan(line_data, '%f');
-            Rocket.stage_z = line_data_num{1}';
+            Rocket.stagePositions = line_data_num{1}';
         
         % Indicates if the aerodynamics are computed with or without the 
         % cone. 'cone_mode' = 'on' indicates the cone is on the rocket, 
@@ -108,9 +108,9 @@ while ~feof(rfid)
             Rocket.emptyMass = line_data_num{1}(1);
         
         % rocket empty inertia    
-        case 'rocket_I'
+        case 'emptyInertia'
             line_data_num = textscan(line_data, '%f');
-            Rocket.rocket_I = line_data_num{1}(1);
+            Rocket.emptyInertia = line_data_num{1}(1);
         
         % rocket center of mass for empty rocket (PL + rocket without
         % motor)
@@ -138,7 +138,7 @@ while ~feof(rfid)
 	    % so the closest to the end of the rocket
         case 'motor'
             line_data_string = textscan(line_data,'%s');
-            Rocket.motor_ID = line_data_string{1}{1};
+            Rocket.motorId = line_data_string{1}{1};
             
             
         % is the tank fuel part of a hybrid motor, so
@@ -149,7 +149,7 @@ while ~feof(rfid)
 	    case 'hybr'
 	        line_data_string = textscan(line_data,'%s');
 	        Rocket.fuel_ID = line_data_string{1}{1};
-	        Rocket.intermotor_d = str2double(line_data_string{1}{2});
+	        Rocket.distanceInterMotors = str2double(line_data_string{1}{2});
 	        Rocket.isHybrid = 1;    
         
             
@@ -227,7 +227,7 @@ end
 % 2. Read Motor
 % -------------------------------------------------------------------------
 
-Rocket = motor2RocketReader(Rocket.motor_ID, Rocket);
+Rocket = motor2RocketReader(Rocket.motorId, Rocket);
 
 % -------------------------------------------------------------------------
 % 3. Checks
@@ -254,11 +254,11 @@ Rocket.Sm = pi*Rocket.dm^2/4;
 % 4.4 Exposed planform fin area
 Rocket.fin_SE = (Rocket.fin_cr + Rocket.fin_ct )/2*Rocket.fin_s; 
 % 4.5 Body diameter at middle of fin station
-Rocket.fin_df = interp1(Rocket.stage_z, Rocket.diameters, Rocket.fin_xt+Rocket.fin_cr/2, 'linear'); 
+Rocket.fin_df = interp1(Rocket.stagePositions, Rocket.diameters, Rocket.fin_xt+Rocket.fin_cr/2, 'linear'); 
 % 4.6 Virtual fin planform area
 Rocket.fin_SF = Rocket.fin_SE + 1/2*Rocket.fin_df*Rocket.fin_cr; 
 % 4.8 Rocket Length
-Rocket.length = Rocket.stage_z(end);
+Rocket.length = Rocket.stagePositions(end);
 
 % 4.9 Rocket inertia + motor and tank inertia
 [~, ~, ~, ~, I_L, ~, I_R, ~] = massProperties(0, Rocket, 'Linear');
@@ -272,12 +272,12 @@ end
 
 function flag = checkStages(Rocket)
     flag = 0;
-    if ~(length(Rocket.diameters) == Rocket.stages && length(Rocket.stage_z) == Rocket.stages)
+    if ~(length(Rocket.diameters) == Rocket.stages && length(Rocket.stagePositions) == Rocket.stages)
         flag = 1;
-        display('ERROR: In rocket defintion, rocket diameters and/or stage_z are not equal in length to the announced stages.')
-    elseif ~(Rocket.diameters(1) == 0 && Rocket.stage_z(1) == 0)
+        display('ERROR: In rocket defintion, rocket diameters and/or stagePositions are not equal in length to the announced stages.')
+    elseif ~(Rocket.diameters(1) == 0 && Rocket.stagePositions(1) == 0)
         flag = 1;
-        display('ERROR: In rocket defintion, rocket must start with a point (diameters(1) = 0, stage_z(1) = 0)');
+        display('ERROR: In rocket defintion, rocket must start with a point (diameters(1) = 0, stagePositions(1) = 0)');
     end
 end
 

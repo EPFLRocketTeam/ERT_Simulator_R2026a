@@ -29,8 +29,8 @@ display(['Burn Time : ' num2str(Rocket.burnTime(end))]);
 % 6DOF Flight Simulation
 %--------------------------------------------------------------------------
 
-marge = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.Burn_Time(end)], railState(end, 2));
-marge1 = simulatior3D.FlightSim([Rocket.Burn_Time(end),0], railState(end, 2));
+marge = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.burnTime(end)], railState(end, 2));
+marge1 = simulatior3D.FlightSim([Rocket.burnTime(end),0], railState(end, 2));
 min= ones(1,91);
 minsafe = 2* ones(1,91) ;
 max = 6 * ones(1,91);

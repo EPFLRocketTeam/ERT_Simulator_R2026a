@@ -18,7 +18,7 @@
 % Change emptyCenterOfMass to 1.8244
 % Value obtained by solving (23.093*x + 8.3420*2.679)/31 = 2.08 for x
 % 23.093 is emptyMass
-% 8.3420 is motor_mass
+% 8.3420 is motorMass
 % 2.6790 is the distance of the motor's centerOfMass from the rocket's CP
 % 31 is the rocket's mass off the rail
 % 2.08 is the adjusted value (-5%) of the CP
@@ -43,7 +43,7 @@ close all
 acc = diff(flightState(:,6))./diff(flightTime);
 display(['Acceleration off rail : ' num2str(acc(1))]);
 display(['Time off rail : ' num2str(railTime(end))]);
-display(['Fuel burn off rail : ' num2str(Rocket.motor_mass+Rocket.emptyMass-simulatior3D.simAuxResults.mass(1))]);
+display(['Fuel burn off rail : ' num2str(Rocket.motorMass+Rocket.emptyMass-simulatior3D.simAuxResults.mass(1))]);
 display(['Inertia off rail : ' num2str(simulatior3D.simAuxResults.inertiaLong(1))]);
 display(['Max speed AGL : ' num2str(flightState(index,3))]);
 
