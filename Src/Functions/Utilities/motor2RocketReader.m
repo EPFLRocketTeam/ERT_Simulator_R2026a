@@ -27,7 +27,7 @@ Rocket.burnTime = time(end);
 
 % mass variation coefficient
 A_T = trapz(time,thrust);
-Rocket.Thrust2dMass_Ratio = Rocket.propelMass/A_T;
+Rocket.thrust2dMassRatio = Rocket.propelMass/A_T;
 else
     
 [time, ThrustP, InfoP] = motorReader(motorFilePath);
@@ -76,6 +76,6 @@ Rocket.burnTime = time(end);
 
 % mass variation coefficient
 A_T = trapz(time,ThrustP);
-Rocket.Thrust2dMass_Ratio = Rocket.propelMass/(A_T);    
+Rocket.thrust2dMassRatio = Rocket.propelMass/(A_T);    
 end
 end
