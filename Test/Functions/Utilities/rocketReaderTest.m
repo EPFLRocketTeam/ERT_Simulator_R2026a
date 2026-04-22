@@ -159,7 +159,7 @@ classdef rocketReaderTest < matlab.unittest.TestCase
                 % Verify derived parameters
                 testCase.verifyEqual(Rocket.maxDiameter, 0.1);
                 testCase.verifyEqual(Rocket.meanFinChord, (0.1 + 0.05)/2);
-                testCase.verifyEqual(Rocket.totalLength, 1.0);
+                testCase.verifyEqual(Rocket.length, 1.0);
                 
             catch ME
                 % Clean up test file
@@ -261,7 +261,7 @@ classdef rocketReaderTest < matlab.unittest.TestCase
                 % Verify derived parameters
                 testCase.verifyEqual(Rocket.maxDiameter, 0.12);
                 testCase.verifyEqual(Rocket.meanFinChord, (0.18 + 0.09)/2);
-                testCase.verifyEqual(Rocket.totalLength, 2.2);
+                testCase.verifyEqual(Rocket.length, 2.2);
                 
             catch ME
                 % Clean up test file
@@ -433,7 +433,7 @@ classdef rocketReaderTest < matlab.unittest.TestCase
                 % Verify hybrid properties
                 testCase.verifyTrue(Rocket.isHybrid);
                 testCase.verifyEqual(Rocket.fuelTankId, 'fuelTank');
-                testCase.verifyEqual(Rocket.interMotorDistance, 0.2);
+                testCase.verifyEqual(Rocket.distanceInterMotors, 0.2);
                 
             catch ME
                 if exist(rocketFile, 'file')

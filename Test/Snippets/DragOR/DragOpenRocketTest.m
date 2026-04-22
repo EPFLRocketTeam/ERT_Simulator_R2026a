@@ -11,7 +11,7 @@ classdef DragOpenRocketTest < matlab.unittest.TestCase
             % Add the directory containing drag_OR to the path
             testDir = fileparts(mfilename('fullpath'));
             rootPath = fileparts(fileparts(fileparts(testDir))); 
-            functionPath = fullfile(rootPath, 'Src', 'Snippets', 'DragOR');
+            functionPath = fullfile(rootPath, 'Src', 'Snippets', 'dragOpenRocket');
             addpath(functionPath);
             testCase.AddedPath = functionPath;
             
@@ -41,54 +41,54 @@ classdef DragOpenRocketTest < matlab.unittest.TestCase
         
         function testTimeInterpolation(testCase)
             % Test interpolation based on time
-            dragCoefficient = dragOR(testCase.SampleDragData, 'time', 5.5, 0, 0);
+            dragCoefficient = dragOpenRocket(testCase.SampleDragData, 'time', 5.5, 0, 0);
             testCase.verifyTrue(isscalar(dragCoefficient) && dragCoefficient >= 0, ...
                 'Should return non-negative scalar');
         end
         
         function testAltitudeInterpolation(testCase)
             % Test interpolation based on altitude
-            dragCoefficient = dragOR(testCase.SampleDragData, 'altitude', 0, 250, 0);
+            dragCoefficient = dragOpenRocket(testCase.SampleDragData, 'altitude', 0, 250, 0);
             testCase.verifyTrue(isscalar(dragCoefficient) && dragCoefficient >= 0, ...
                 'Should return non-negative scalar');
         end
         
         function testSpeedInterpolation(testCase)
             % Test interpolation based on speed
-            dragCoefficient = dragOR(testCase.SampleDragData, 'speed', 0, 0, 75);
+            dragCoefficient = dragOpenRocket(testCase.SampleDragData, 'speed', 0, 0, 75);
             testCase.verifyTrue(isscalar(dragCoefficient) && dragCoefficient >= 0, ...
                 'Should return non-negative scalar');
         end
         
         function testCaseInsensitivity(testCase)
             % Test case insensitivity
-            dragCoefficient1 = dragOR(testCase.SampleDragData, 'TIME', 5, 0, 0);
-            dragCoefficient2 = dragOR(testCase.SampleDragData, 'time', 5, 0, 0);
+            dragCoefficient1 = dragOpenRocket(testCase.SampleDragData, 'TIME', 5, 0, 0);
+            dragCoefficient2 = dragOpenRocket(testCase.SampleDragData, 'time', 5, 0, 0);
             testCase.verifyEqual(dragCoefficient1, dragCoefficient2, 'Should be case insensitive');
         end
         
         function testInvalidInterpolationType(testCase)
             % Test invalid interpolation type
-            testCase.verifyError(@() dragOR(testCase.SampleDragData, 'invalid', 5, 0, 0), ...
+            testCase.verifyError(@() dragOpenRocket(testCase.SampleDragData, 'invalid', 5, 0, 0), ...
                 'drag_OR:InvalidInterpType');
         end
         
         function testEmptyData(testCase)
             % Test empty data
-            testCase.verifyError(@() dragOR([], 'time', 5, 0, 0), ...
+            testCase.verifyError(@() dragOpenRocket([], 'time', 5, 0, 0), ...
                 'drag_OR:EmptyData');
         end
         
         function testInsufficientInputs(testCase)
             % Test insufficient inputs
-            testCase.verifyError(@() dragOR(testCase.SampleDragData, 'time'), ...
+            testCase.verifyError(@() dragOpenRocket(testCase.SampleDragData, 'time'), ...
                 'drag_OR:InsufficientInputs');
         end
         
         function testSmallDataset(testCase)
             % Test with small dataset
             smallData = [1, 100, 50, 0.8; 2, 200, 60, 0.7; 3, 300, 70, 0.6];
-            dragCoefficient = dragOR(smallData, 'time', 1.5, 0, 0);
+            dragCoefficient = dragOpenRocket(smallData, 'time', 1.5, 0, 0);
             testCase.verifyTrue(isscalar(dragCoefficient) && dragCoefficient >= 0, ...
                 'Should handle small datasets');
         end
@@ -96,7 +96,7 @@ classdef DragOpenRocketTest < matlab.unittest.TestCase
         function testSinglePointDataset(testCase)
             % Test with single data point (should error)
             singlePoint = [1, 100, 50, 0.8];
-            testCase.verifyError(@() dragOR(singlePoint, 'time', 1.5, 0, 0), ...
+            testCase.verifyError(@() dragOpenRocket(singlePoint, 'time', 1.5, 0, 0), ...
                 'drag_OR:InsufficientData');
         end
         
@@ -104,7 +104,7 @@ classdef DragOpenRocketTest < matlab.unittest.TestCase
             % Test data with NaN values
             dataWithNaN = testCase.SampleDragData;
             dataWithNaN(5, :) = NaN; % Add a NaN row
-            dragCoefficient = dragOR(dataWithNaN, 'time', 5, 0, 0);
+            dragCoefficient = dragOpenRocket(dataWithNaN, 'time', 5, 0, 0);
             testCase.verifyTrue(isscalar(dragCoefficient) && dragCoefficient >= 0, ...
                 'Should handle NaN values gracefully');
         end
@@ -112,7 +112,7 @@ classdef DragOpenRocketTest < matlab.unittest.TestCase
         function testDuplicateXValues(testCase)
             % Test data with duplicate x values
             duplicateData = [testCase.SampleDragData; testCase.SampleDragData(1:5, :)];
-            dragCoefficient = dragOR(duplicateData, 'time', 5, 0, 0);
+            dragCoefficient = dragOpenRocket(duplicateData, 'time', 5, 0, 0);
             testCase.verifyTrue(isscalar(dragCoefficient) && dragCoefficient >= 0, ...
                 'Should handle duplicate x values');
         end
@@ -120,7 +120,7 @@ classdef DragOpenRocketTest < matlab.unittest.TestCase
         function testModerateExtrapolation(testCase)
             % Test with moderate extrapolation (within reasonable bounds)
             warning('off', 'drag_OR:ModerateExtrapolation');
-            dragCoefficient = dragOR(testCase.SampleDragData, 'time', 12, 0, 0);
+            dragCoefficient = dragOpenRocket(testCase.SampleDragData, 'time', 12, 0, 0);
             warning('on', 'drag_OR:ModerateExtrapolation');
             
             testCase.verifyTrue(isscalar(dragCoefficient) && dragCoefficient >= 0 && dragCoefficient <= 2, ...
@@ -130,7 +130,7 @@ classdef DragOpenRocketTest < matlab.unittest.TestCase
         function testFarExtrapolation(testCase)
             % Test with far extrapolation
             warning('off', 'drag_OR:FarExtrapolation');
-            dragCoefficient = dragOR(testCase.SampleDragData, 'time', 100, 0, 0);
+            dragCoefficient = dragOpenRocket(testCase.SampleDragData, 'time', 100, 0, 0);
             warning('on', 'drag_OR:FarExtrapolation');
             
             testCase.verifyTrue(isscalar(dragCoefficient) && dragCoefficient >= 0 && dragCoefficient <= 2, ...

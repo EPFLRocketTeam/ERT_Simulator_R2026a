@@ -1,0 +1,17 @@
+numStages 2
+stageDiameters 0 0.1
+stagePositions 0 1.0
+coneMode maybe
+numFins 4
+finRootPosition 0.6
+finSpan 0.05
+finRootChord 0.1
+finTipChord 0.05
+finThickness 0.003
+numLaunchLugs 2
+lugSurfaceArea 0.0005
+emptyMass 10.0
+emptyInertia 0.3
+emptyCenterOfMass 0.5
+motorId testMotor.txt
+motorThrustFactor 1.0

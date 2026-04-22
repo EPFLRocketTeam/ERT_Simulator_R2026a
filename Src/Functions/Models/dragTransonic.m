@@ -1,334 +1,312 @@
-function dragCoefficient = dragTransonic(rocket, angleOfAttack, freestreamVelocity, kinematicViscosity, speedOfSound)
+function Value = drag_transonic(Rocket, alpha, Uinf, nu, a)
     % INPUTS:
-    % - rocket              : Rocket object
-    % - angleOfAttack       : Angle of attack [rad]
-    % - freestreamVelocity  : Free stream velocity [m/s]
-    % - kinematicViscosity  : Dynamic viscosity [m2/s]
-    % - speedOfSound        : Speed of sound [m/s]
+    % - Rocket  : Rocket object
+    % - alpha   : angle of attack [rad]
+    % - Uinf    : Free stream velocity [m/s]
+    % - nu      : Dynamic viscosity [m2/s]
+    % - a       : Speed of sound [m/s]
     % OUTPUTS:
-    % - dragCoefficient     : Drag coefficient
+    % - CD      : Drag coefficient
     % REFERENCES:
     % - Drag Coefficient Prediction, Chapter 1 Preetam Sharma
     % Semester Project Report, Professor Flavio Noca, December 2021.
 
+<<<<<<< HEAD
+        % -------------------------------------------------------------------------
+    % 0.1 Change of units from m to ft and inches
+=======
     %REMARK: drag is independent of alpha (subsitious) + lotta magic numbers
 
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef
     % -------------------------------------------------------------------------
-    % 0.1 Velocity validation
+    
+%     % velocities in ft
+%     a = a * 3.28084;
+%     Uinf = Uinf * 3.28084;
+%     
+%     % nu in ft2/s
+%     mu = nu * 3.28084^2;
+
+%REMARK: drag is independent of alpha (subsitious) + lotta magic numbers
+
     % -------------------------------------------------------------------------
-    if freestreamVelocity < 0.1
-        freestreamVelocity = 0.1;
+    % 0.2 Divergence 
+    % -------------------------------------------------------------------------
+    if Uinf < 0.1
+        Uinf = 0.1;
     end 
     
     % -------------------------------------------------------------------------
     % 1. Parameters
     % -------------------------------------------------------------------------
 
-    machNumber = freestreamVelocity / speedOfSound;
+    M = Uinf/a; % Mach number
     
-    % Rocket geometry
-    totalLength = rocket.stagePositions(end);
-    noseLength = rocket.stagePositions(2);
-    maxDiameter = rocket.maxDiameter;
-    maxRadius = maxDiameter / 2;
-    baseDiameter = rocket.stageDiameters(end);
+    % Geometry of the rocket (inches, deg)
+    L = Rocket.stagePositions(end);% * 39.3701;                 % Lenght of the rocket
+    Ln = Rocket.stagePositions(2);% * 39.3701;     % Length of the rocket's nose
+    d = Rocket.dm;% * 39.3701;           % Maximum rocket diameter
+    r = d / 2;                                       % Maximum rocket radius
+    db = Rocket.diameters(end);% * 39.3701;             % Base diameter of rocket at aft end
+    Lo = L - Ln;                                     % Rocket length to body ratio, where the length is taken aft of the maximum body-diameter position: Assuming no boatrails TODO: calculate for boatrails presence
+    Lb = L;                                          % Base position ATTENTION PEUT ETRE FAUX
+    Le = L;                                          % Effective length of rocket ATTENTION PEUT ETRE FAUX
+    Cr = Rocket.fin_cr;% * 39.3701;                % Root chord of fin
+    Ct = Rocket.fin_ct;% * 39.3701;                % Tip chord of fin
+    Nf = Rocket.fin_n;                      % Fin number
+    t = Rocket.fin_t;%* 39.3701;          % Maximum thickness of fin
+    Xtc = Rocket.fin_L1;                                         % Distance from fin leading edge to maximum thickness
     
-    % Body lengths
-    aftBodyLength = totalLength - noseLength;  % Length aft of maximum diameter position
-    basePosition = totalLength;                % Base position
-    effectiveLength = totalLength;             % Effective length of rocket
+    % First useful parameters
+    SB = 2 * pi * d / 2 * (L - Ln) + pi * d / 2 * sqrt(Ln^2 + d^2 / 4); % Total wetted surface area of body ATTENTION ICI PAS EXACTE
+    Sf = Rocket.fin_SF;       % Total wetted surface area of fins % Other possible calculation: bs2*(L-Lf+Cr-bs2/np.tan(np.deg2rad(Thetaf)))
+    Sr = SB + Sf;                                    % Total wetted surface area of rocket
+    Xtcbar = Xtc / Cr;                               % Normalized distance from fin leading edge to maximum thickness
     
-    % Fin geometry
-    rootChord = rocket.finRootChord;
-    tipChord = rocket.finTipChord;
-    finCount = rocket.numFins;
-    maxFinThickness = rocket.finThickness;
-    maxThicknessDistance = rocket.finLeadingEdgeLength;      % Distance from fin leading edge to maximum thickness
+    %Material coefficients
+    KB = 1.016e-5;
+    KF = 2.032e-5;
     
-    % Derived parameters
-    bodyWettedArea = 2 * pi * maxDiameter / 2 * (totalLength - noseLength) + ...
-                     pi * maxDiameter / 2 * sqrt(noseLength^2 + maxDiameter^2 / 4);
-    finWettedArea = rocket.virtualFinArea;
-    totalWettedArea = bodyWettedArea + finWettedArea;
-    normalizedThicknessDistance = maxThicknessDistance / rootChord;
-    
-    % Material coefficients
-    bodyRoughnessCoefficient = 1.016e-5;
-    finRoughnessCoefficient = 2.032e-5;
-    
-    % Additional fin parameters (may be useful)
-    finLeadingEdgePosition = rocket.finRootPosition;
-    
-    % Model limitation check
-    if noseLength / effectiveLength > 0.6
-        warning("In drag calculation, the transonic model gives a bad approximation.");
-    end
-        
-    % ---------------------------------------------------------------------
-    % 2. Body friction drag
-    % ---------------------------------------------------------------------
-    
-    % Compressible Reynolds Number
-    compressibleReynoldsNumber = speedOfSound * machNumber * totalLength / (12 * kinematicViscosity) * ...
-                               (1 + 0.0283 * machNumber - 0.043 * machNumber^2 + 0.2107 * machNumber^3 - ...
-                                0.03829 * machNumber^4 + 0.002709 * machNumber^5);
-    
-    % Incompressible skin friction coefficient
-    incompressibleSkinFriction = 0.037036 * compressibleReynoldsNumber ^ (-0.155079);
-    
-    % Compressible skin friction coefficient
-    compressibleSkinFriction = incompressibleSkinFriction * ...
-                             (1 + 0.00798 * machNumber - 0.1813 * machNumber^2 + 0.0632 * machNumber^3 - ...
-                              0.00933 * machNumber^4 + 0.000549 * machNumber^5);
-    
-    % Incompressible skin friction coefficient with roughness
-    incompressibleRoughFriction = 1 / ((1.89 + 1.62 * log10(totalLength / bodyRoughnessCoefficient)) ^ 2.5);
-    
-    % Compressible skin friction coefficient with roughness
-    compressibleRoughFriction = incompressibleRoughFriction / ((1 + 0.2044 * machNumber^2));
-    
-    % Final skin friction coefficient
-    if compressibleSkinFriction >= compressibleRoughFriction
-        finalSkinFriction = compressibleSkinFriction;
-    else
-        finalSkinFriction = compressibleRoughFriction;
-    end
-        
-    % Total friction drag for body
-    bodyFrictionDragCoefficient = finalSkinFriction * (1 + 60 / ((totalLength / maxDiameter)^3) + ...
-                                 0.0025 * (totalLength / maxDiameter)) * (4 * bodyWettedArea) / (pi * maxDiameter^2);
-    
-    
-    % ---------------------------------------------------------------------
-    % 3.1 Fin friction drag (compressible)
-    % ---------------------------------------------------------------------
-    
-    % Compressible Reynolds Number
-    compressibleReynoldsNumber = speedOfSound * machNumber * rootChord / (12 * kinematicViscosity) * ...
-                               (1 + 0.0283 * machNumber - 0.043 * machNumber^2 + 0.2107 * machNumber^3 - ...
-                                0.03829 * machNumber^4 + 0.002709 * machNumber^5);
-    
-    % Incompressible skin friction coefficient
-    incompressibleSkinFriction = 0.037036 * compressibleReynoldsNumber ^ (-0.155079);
-    
-    % Compressible skin friction coefficient
-    compressibleSkinFriction = incompressibleSkinFriction * ...
-                             (1 + 0.00798 * machNumber - 0.1813 * machNumber^2 + 0.0632 * machNumber^3 - ...
-                              0.00933 * machNumber^4 + 0.000549 * machNumber^5);
-    
-    % Incompressible skin friction coefficient with roughness
-    incompressibleRoughFriction = 1 / ((1.89 + 1.62 * log10(rootChord / finRoughnessCoefficient)) ^ 2.5);
-    
-    % Compressible skin friction coefficient with roughness
-    compressibleRoughFriction = incompressibleRoughFriction / ((1 + 0.2044 * machNumber^2));
-    
-    % Final skin friction coefficient
-    if compressibleSkinFriction >= compressibleRoughFriction
-        finalSkinFriction = compressibleSkinFriction;
-    else
-        finalSkinFriction = compressibleRoughFriction;
-    end
-        
-    % ---------------------------------------------------------------------
-    % 3.2 Fin friction drag (incompressible)
-    % ---------------------------------------------------------------------
-        
-    % Incompressible Reynolds Number
-    reynoldsNumber = speedOfSound * machNumber * rootChord / (12 * kinematicViscosity);
-    
-    % Ratio of fin tip chord to root chord
-    taperRatio = tipChord / rootChord;
-    
-    % Average flat plate skin friction coefficient for each fin panel
-    if taperRatio == 0
-        finFrictionDrag = finalSkinFriction * (1 + 0.5646 / log10(reynoldsNumber));
-    elseif taperRatio == 1
-        finFrictionDrag = 0;
-    else
-        finFrictionDrag = finalSkinFriction * ((log10(reynoldsNumber))^2.6) / ((taperRatio^2 - 1)) * ...
-                        ((taperRatio^2) / ((log10(reynoldsNumber * taperRatio))^2.6) - ...
-                        1 / ((log10(reynoldsNumber))^2.6) + 0.5646 * ...
-                        ((taperRatio^2) / ((log10(reynoldsNumber * taperRatio))^3.6) - ...
-                        1 / ((log10(reynoldsNumber))^3.6)));
-    end
-    
-    % Coefficient of friction drag for all fins
-    finsFrictionDragCoefficient = finFrictionDrag * (1 + 60 * (maxFinThickness / rootChord)^4 + ...
-                                 0.8 * (1 + 5 * normalizedThicknessDistance^2) * (maxFinThickness / rootChord)) * ...
-                                 (4 * finCount * finWettedArea) / (pi * maxDiameter^2);
-    
-    % ---------------------------------------------------------------------
-    % 4. Protuberance friction drag
-    % ---------------------------------------------------------------------
-    
-    % First protuberance set
-    protuberanceCount = 8;
-    protuberanceLength = 0.194 * rootChord;
-    protuberanceThickness = maxFinThickness;
-    protuberanceWettedArea = 2 * pi * (maxRadius + maxFinThickness) / 4 * protuberanceLength + ...
-                           2 * pi / 4 * protuberanceThickness * (2 * maxRadius + protuberanceThickness);
-    protuberanceRoughness = 0.008;
-    distanceFromNose = finLeadingEdgePosition + rootChord / 2;
-    protuberanceCrossSection = pi / 4 * protuberanceThickness * (2 * maxRadius + protuberanceThickness);
-    
-    compressibleReynoldsNumber = speedOfSound * machNumber * protuberanceLength / (12 * kinematicViscosity) * ...
-                               (1 + 0.0283 * machNumber - 0.043 * machNumber^2 + 0.2107 * machNumber^3 - ...
-                                0.03829 * machNumber^4 + 0.002709 * machNumber^5);
-    incompressibleSkinFriction = 0.037036 * compressibleReynoldsNumber^(-0.155079);
-    compressibleSkinFriction = incompressibleSkinFriction * ...
-                             (1 + 0.00798 * machNumber - 0.1813 * machNumber^2 + 0.0632 * machNumber^3 - ...
-                              0.00933 * machNumber^4 + 0.000549 * machNumber^5);
-    incompressibleRoughFriction = 1 / ((1.89 + 1.62 * log10(protuberanceLength / protuberanceRoughness))^2.5);
-    compressibleRoughFriction = incompressibleRoughFriction / ((1 + 0.2044 * machNumber^2));
-    
-    if compressibleSkinFriction >= compressibleRoughFriction
-        finalSkinFriction = compressibleSkinFriction;
-    else
-        finalSkinFriction = compressibleRoughFriction;
-    end
-    
-    protuberanceSkinFriction = 0.8151 * finalSkinFriction * (distanceFromNose / protuberanceLength)^(-0.1243);
-    protuberanceDrag1 = protuberanceSkinFriction * (1 + 1.798 * (sqrt(protuberanceCrossSection) / protuberanceLength)^(3/2)) * ...
-                      4 * protuberanceCount * protuberanceWettedArea / (pi * maxDiameter^2);
-    
-    % Second protuberance set
-    protuberanceCount = 1;
-    protuberanceLength = 0.4094488;
-    protuberanceThickness = 0.15748;
-    protuberanceWettedArea = 2 * pi * (maxRadius + maxFinThickness) * protuberanceLength + ...
-                           2 * pi * protuberanceThickness * (2 * maxRadius + protuberanceThickness);
-    protuberanceRoughness = 0.008;
-    distanceFromNose = totalLength - protuberanceLength;
-    protuberanceCrossSection = pi * protuberanceThickness * (2 * maxRadius + protuberanceThickness);
-    
-    compressibleReynoldsNumber = speedOfSound * machNumber * protuberanceLength / (12 * kinematicViscosity) * ...
-                               (1 + 0.0283 * machNumber - 0.043 * machNumber^2 + 0.2107 * machNumber^3 - ...
-                                0.03829 * machNumber^4 + 0.002709 * machNumber^5);
-    incompressibleSkinFriction = 0.037036 * compressibleReynoldsNumber^(-0.155079);
-    compressibleSkinFriction = incompressibleSkinFriction * ...
-                             (1 + 0.00798 * machNumber - 0.1813 * machNumber^2 + 0.0632 * machNumber^3 - ...
-                              0.00933 * machNumber^4 + 0.000549 * machNumber^5);
-    incompressibleRoughFriction = 1 / ((1.89 + 1.62 * log10(protuberanceLength / protuberanceRoughness))^2.5);
-    compressibleRoughFriction = incompressibleRoughFriction / ((1 + 0.2044 * machNumber^2));
-    
-    if compressibleSkinFriction >= compressibleRoughFriction
-        finalSkinFriction = compressibleSkinFriction;
-    else
-        finalSkinFriction = compressibleRoughFriction;
-    end
-    
-    protuberanceSkinFriction = 0.8151 * finalSkinFriction * (distanceFromNose / protuberanceLength)^(-0.1243);
-    protuberanceDrag2 = protuberanceSkinFriction * (1 + 1.798 * (sqrt(protuberanceCrossSection) / protuberanceLength)^(3/2)) * ...
-                      4 * protuberanceCount * protuberanceWettedArea / (pi * maxDiameter^2);
-    
-    % ---------------------------------------------------------------------
-    % 5. Drag due to excrescencies
-    % ---------------------------------------------------------------------
-    
-    % Coefficient for excrescencies drag increment
-    if machNumber < 0.78
-        excrescenceCoefficient = 0.00038;
-    elseif machNumber <= 1.04
-        excrescenceCoefficient = -0.4501 * machNumber^4 + 1.5954 * machNumber^3 - 2.1062 * machNumber^2 + ...
-                               1.2288 * machNumber - 0.26717;
-    else
-        excrescenceCoefficient = 0.0002 * machNumber^2 - 0.0012 * machNumber + 0.0018;
-    end
-    
-    % Change in drag coefficient due to excrescencies 
-    excrescenceDragIncrement = excrescenceCoefficient * (4 * totalWettedArea) / (pi * maxDiameter^2);
-    
-    % ---------------------------------------------------------------------
-    % 6. Total friction and interference drag coefficient
-    % ---------------------------------------------------------------------
-    
-    % Mutual interference factor of fins and launch lug with body
-    interferenceFactor = 1.04;
-    totalFrictionDrag = bodyFrictionDragCoefficient + interferenceFactor * finsFrictionDragCoefficient + ...
-                      excrescenceDragIncrement + interferenceFactor * protuberanceDrag1 + interferenceFactor * protuberanceDrag2;
-    
-    % ---------------------------------------------------------------------
-    % 7. Base drag
-    % ---------------------------------------------------------------------
-    
-    % Constants for subsonic flows
-    baseDragConstant = 0.0274 * atan((aftBodyLength / maxDiameter)) + 0.0116;
-    baseDragExponent = 3.6542 * (aftBodyLength / maxDiameter)^(-0.2733);
-    
-    % Base drag coefficient for subsonic flows (M < 0.6)
-    baseDragSubsonic = baseDragConstant * ((baseDiameter / maxDiameter)^baseDragExponent) / sqrt(totalFrictionDrag);
-    
-    % Constants for other flows
-    if machNumber > 0.6 && machNumber < 1.0
-        machCorrectionFactor = 1.0 + 215.8 * (machNumber - 0.6)^6.0;
-    elseif machNumber < 2.0
-        machCorrectionFactor = 2.0881 * (machNumber - 1)^3 - 3.7938 * (machNumber - 1)^2 + ...
-                            1.4618 * (machNumber - 1) + 1.883917;
-    else
-        machCorrectionFactor = 0.297 * (machNumber - 2)^3 - 0.7937 * (machNumber - 2)^2 - ...
-                            0.1115 * (machNumber - 2) + 1.64006;
-    end
-        
-    % Base drag coefficient for other flows (M > 0.6)
-    baseDragSupersonic = baseDragSubsonic * machCorrectionFactor;
-    
-    % ---------------------------------------------------------------------
-    % 8. Transonic wave drag
-    % ---------------------------------------------------------------------
-    
-    % Transonic drag divergence Mach Number
-    dragDivergenceMach = -0.0156 * (noseLength / maxDiameter)^2 + 0.136 * (noseLength / maxDiameter) + 0.6817;
-    
-    % Constants for the wave drag
-    if noseLength / effectiveLength < 0.2
-        waveDragConstant1 = 2.4;
-        waveDragExponent = -1.05;
-    else
-        waveDragConstant1 = -321.94 * (noseLength / effectiveLength)^2 + 264.07 * (noseLength / effectiveLength) - 36.348;
-        waveDragExponent = 19.634 * (noseLength / effectiveLength)^2 - 18.369 * (noseLength / effectiveLength) + 1.7434;
-    end
-    
-    % Final Mach Number of Transonic Region
-    finalTransonicMach = waveDragConstant1 * (effectiveLength / maxDiameter)^waveDragExponent + 1.0275;
-    
-    % Other constants for the wave drag
-    waveDragConstant2 = 50.676 * (noseLength / basePosition)^2 - 51.734 * (noseLength / basePosition) + 15.642;
-    waveDragConstant3 = -2.2538 * (noseLength / basePosition)^2 + 1.3108 * (noseLength / basePosition) - 1.7344;
-    
-    % Maximum drag rise over transonic region
-    if effectiveLength / maxDiameter >= 6
-        maxWaveDragRise = waveDragConstant2 * (effectiveLength / maxDiameter)^waveDragConstant3;
-    else
-        maxWaveDragRise = waveDragConstant2 * 6^waveDragConstant3;
-    end
-    
-    % Wave drag function
-    normalizedMach = (machNumber - dragDivergenceMach) / (finalTransonicMach - dragDivergenceMach);
-    waveDragFunction = -8.3474 * normalizedMach^5 + 24.543 * normalizedMach^4 - 24.946 * normalizedMach^3 + ...
-                     8.6321 * normalizedMach^2 + 1.1195 * normalizedMach;
-    
-    % Transonic drag rise for given Mach Number
-    if machNumber >= dragDivergenceMach && machNumber <= finalTransonicMach
-        transonicWaveDragRise = maxWaveDragRise * waveDragFunction;
-    else
-        transonicWaveDragRise = 0;
-    end
-    
-    % ---------------------------------------------------------------------
-    % 9. Supersonic wave drag
-    % ---------------------------------------------------------------------
+    % May be of use
+    Lf = Rocket.fin_xt;% * 39.3701; %Position of LE of fin
+    % Thetaf = atan((Rocket.get_fin_xs)/(Rocket.get_fin_span)) % Sweep angle (deg)
+    % bs2 = Rocket.get_fin_span * 39.3701 % Lenght of fin
 
-    % Supersonic drag rise for given Mach Number
-    if machNumber >= finalTransonicMach
-        supersonicWaveDragRise = maxWaveDragRise;
+    % Limitation of model
+    if Ln/Le > 0.6
+        display("WARNING: In drag calculation, the transonic model gives a bad approximation.");
     else
-        supersonicWaveDragRise = 0;
+        
+        % ---------------------------------------------------------------------
+        % 2. Body friction drag
+        % ---------------------------------------------------------------------
+        
+        % equations p4 and p5
+        
+        % Compressible Reynolds Number
+        Rnstar = a * M * L / (12 * nu)*(1 + 0.0283 * M - 0.043 * M^2 + 0.2107 * M^3 - 0.03829 * M^4 + 0.002709 * M^5);
+        
+        % Incompressible skin friction coefficient
+        Cfstar = 0.037036 * Rnstar ^ (-0.155079);
+        
+        % Compressible skin friction coefficient
+        Cf = Cfstar * (1 + 0.00798 * M - 0.1813 * M ^ (2) + 0.0632 * M ^ (3) - 0.00933 * M ^ (4) + 0.000549 * M ^ (5));
+        
+        % Incompressible skin friction coefficient with roughness
+        Cftermstar = 1 / ((1.89 + 1.62 * log10 (L / KB)) ^ (2.5));
+        
+        % Compressible skin friction coefficient with roughness
+        Cfterm = Cftermstar / ((1 + 0.2044 * M ^ (2)));
+        
+        % Final skin friction coefficient
+        if Cf >= Cfterm
+            Cffinal = Cf;
+        else
+            Cffinal = Cfterm;
+        end
+            
+        % Total friction drag for body
+        Cdfbody = Cffinal * (1 + 60 / ((L / d) ^ (3)) + 0.0025 * (L / d)) * (4 * SB) / (pi * d ^ (2));
+        
+        
+        % ---------------------------------------------------------------------
+        % 3.1 Fin friction drag (compressible)
+        % ---------------------------------------------------------------------
+        
+        % Compressible Reynolds Number
+        Rnstar = a * M * Cr / (12 * nu) * (1 + 0.0283 * M - 0.043 * M ^ 2 + 0.2107 * M ^ 3 - 0.03829 * M ^ 4 + 0.002709 * M ^ 5);
+        
+        % Incompressible skin friction coefficient
+        Cfstar = 0.037036 * Rnstar ^ (-0.155079);
+        
+        % Compressible skin friction coefficient
+        Cf = Cfstar * (1 + 0.00798 * M - 0.1813 * M ^ (2) + 0.0632 * M ^ (3) - 0.00933 * M ^ (4) + 0.000549 * M ^ (5));
+        
+        % Incompressible skin friction coefficient with roughness
+        Cftermstar = 1 / ((1.89 + 1.62 * log10(Cr / KF)) ^ (2.5));
+        
+        % Compressible skin friction coefficient with roughness
+        Cfterm = Cftermstar / ((1 + 0.2044 * M ^ (2)));
+        
+        % Final skin friction coefficient
+        if Cf >= Cfterm
+            Cffinal = Cf;
+        else
+            Cffinal = Cfterm;
+        end
+            
+        % ---------------------------------------------------------------------
+        % 3.2 Fin friction drag (incompressible)
+        % ---------------------------------------------------------------------
+            
+        % Incompressible Reynolds Number
+        Rn = a * M * Cr / (12 * nu);
+        
+        % Ratio of fin tip chord to root chord
+        Lambda = Ct / Cr;
+        
+        % Average flat plate skin friction coefficient for each fin panel
+        if Lambda == 0
+            Cflam = Cffinal * (1 + (0.5646) / (log10(Rn)));
+        elseif Lambda == 1
+            Cflam = 0;
+        else
+            Cflam = Cffinal * ((log10(Rn)) ^ (2.6)) / ((Lambda ^ (2) - 1)) * ((Lambda ^ (2)) / ((log10(Rn * Lambda)) ^ (2.6)) - (1) / ((log10(Rn)) ^ (2.6)) + 0.5646 * ((Lambda ^ (2)) / ((log10(Rn * Lambda)) ^ (3.6)) - (1) / ((log10(Rn)) ^ (3.6))));
+        end
+        % Coefficient of friction drag for all fins
+        Cdffins = Cflam * (1 + 60 * ((t) / (Cr)) ^ (4) + 0.8 * (1 + 5 * Xtcbar ^ (2)) * ((t) / (Cr))) * (4 * Nf * Sf) / (pi * d ^ (2));
+        
+        % ---------------------------------------------------------------------
+        % 4. Protuberance friction drag
+        % ---------------------------------------------------------------------
+        
+        Npro = 8; %Number of identical protuberances
+        Lp = 0.194*Cr;
+        tpro = t; %thick of prot
+        Spro = 2*pi*(r+t)/4*Lp+2*pi/4*tpro*(2*r+tpro); %Wetted surface area of each protuberance
+        Kp = 0.008;
+        Lnosprot = Lf+Cr/2;
+        Aprot = pi/4*tpro*(2*r+tpro);
+        
+        Rnstar = a*M*Lp/(12*nu)*(1 + 0.0283*M - 0.043*M^2 + 0.2107*M^3 - 0.03829*M^4 + 0.002709*M^5); %Compressible Reynolds Number
+        Cfstar = 0.037036*Rnstar^(-0.155079); %Incompressible skin friction coefficient
+        Cf = Cfstar*(1+0.00798*M-0.1813*M^(2)+0.0632*M^(3)-0.00933*M^(4)+0.000549*M^(5)); %Compressible skin friction coefficient
+        Cftermstar = 1/((1.89+1.62*log10(Lp/Kp))^(2.5)); %Incompressible skin friction coefficient with roughness
+        Cfterm = Cftermstar/((1+0.2044*M^(2))); %= Compressible skin friction coefficient with roughness
+        if Cf >= Cfterm
+            Cffinal = Cf; %Final skin friction coefficient
+        else
+            Cffinal = Cfterm;
+        end
+        Cfpro = 0.8151*Cffinal*(Lnosprot/Lp)^(-0.1243);
+        Cdpro1 = Cfpro*(1+1.798*(sqrt(Aprot)/Lp)^(3/2))*4*Npro*Spro/(pi*d^2);
+        
+        %%% PROTUBERANCE FRICTION DRAG NUMBER 2 %%%
+        
+        Npro = 1; %Number of identical protuberances
+        Lp = 0.4094488; %1.04cm
+        tpro = 0.15748; %thick of prot 0.4cm
+        Spro = 2*pi*(r+t)*Lp+2*pi*tpro*(2*r+tpro); %Wetted surface area of each protuberance
+        Kp = 0.008;
+        Lnosprot = L-Lp;
+        Aprot = pi*tpro*(2*r+tpro);
+        
+        Rnstar = a*M*Lp/(12*nu)*(1 + 0.0283*M - 0.043*M^2 + 0.2107*M^3 - 0.03829*M^4 + 0.002709*M^5); %Compressible Reynolds Number
+        Cfstar = 0.037036*Rnstar^(-0.155079); %Incompressible skin friction coefficient
+        Cf = Cfstar*(1+0.00798*M-0.1813*M^(2)+0.0632*M^(3)-0.00933*M^(4)+0.000549*M^(5)); %Compressible skin friction coefficient
+        Cftermstar = 1/((1.89+1.62*log10(Lp/Kp))^(2.5)); %Incompressible skin friction coefficient with roughness
+        Cfterm = Cftermstar/((1+0.2044*M^(2))); %= Compressible skin friction coefficient with roughness
+        if Cf >= Cfterm
+            Cffinal = Cf; %Final skin friction coefficient
+        else
+            Cffinal = Cfterm;
+        end
+        Cfpro = 0.8151*Cffinal*(Lnosprot/Lp)^(-0.1243);
+        Cdpro2 = Cfpro*(1+1.798*(sqrt(Aprot)/Lp)^(3/2))*4*Npro*Spro/(pi*d^2);
+        
+        % ---------------------------------------------------------------------
+        % 5. Drag due to excresciencies
+        % ---------------------------------------------------------------------
+        
+        % Coefficient for excrescencies drag increment
+        if M < 0.78
+            Ke = 0.00038;
+        elseif M <= 1.04
+            Ke = -0.4501*M^(4)+1.5954*M^(3)-2.1062*M^(2)+1.2288*M-0.26717;
+        else
+            Ke = 0.0002*M^(2)-0.0012*M+0.0018;
+        end
+        % Change is drag coefficient due to excrescencies 
+        Cde = Ke*(4*Sr)/(pi*d^2);
+        
+        % ---------------------------------------------------------------------
+        % 6. Total friction and interfernce drag coefficient
+        % ---------------------------------------------------------------------
+        
+        % Mutual interference factor of fins and launch lug with body
+        Kf = 1.04;
+        Cdf = Cdfbody + Kf*Cdffins + Cde + Kf*Cdpro1 + Kf*Cdpro2;
+        
+        % ---------------------------------------------------------------------
+        % 7. Base drag
+        % ---------------------------------------------------------------------
+        
+        % Constants for subsonic flows
+        Kb = 0.0274*atan((Lo/d)+0.0116);
+        n = 3.6542*((Lo)/(d))^(-0.2733);
+        
+        % Base drag coefficient for subsonic flows (M < 0.6)
+        CdbMinf06 = Kb*(((db)/(d))^(n))/(sqrt(Cdf));
+        
+        % Constants for other flows
+        if M > 0.6 && M < 1.0
+            fb = 1.0 + 215.8*(M-0.6)^(6.0);
+        elseif M < 2.0
+            fb = 2.0881*(M-1)^(3)-3.7938*(M-1)^(2)+1.4618*(M-1)+1.883917;
+        else
+            fb = 0.297*(M-2)^(3)-0.7937*(M-2)^(2)-0.1115*(M-2)+1.64006;
+        end
+            
+        % Base drag coefficient for other flows (M > 0.6)
+        CdbMsup06 = CdbMinf06*fb;
+        
+        % ---------------------------------------------------------------------
+        % 8. Transonic wave drag
+        % ---------------------------------------------------------------------
+        
+        % Transonic drag divergence Mach Number
+        Md = -0.0156*(Ln/d)^2 + 0.136*(Ln/d) + 0.6817;
+        
+        % Constants for the wave drag
+        if Ln/Le < 0.2
+            a = 2.4;
+            b = -1.05;
+        else
+            a = -321.94*((Ln)/(Le))^(2)+264.07*((Ln)/(Le))-36.348;
+            b = 19.634*((Ln)/(Le))^(2)-18.369*((Ln)/(Le))+1.7434;
+        end
+        
+        % Final Mach Number of Transonic Region
+        Mf = a*((Le)/(d))^(b)+1.0275;
+        
+        % Other constants for the wave drag
+        c = 50.676*((Ln)/(Lb))^(2)-51.734*((Ln)/(Lb))+15.642;
+        g = -2.2538*((Ln)/(Lb))^(2)+1.3108*((Ln)/(Lb))-1.7344;
+        
+        % Maximum drag rise over transonic region
+        if Le/d >= 6
+            DeltaCdmax = c*(Le/d)^g;
+        else
+            DeltaCdmax = c*(6)^g;
+        end
+        
+        % (p14)
+        x = (M-Md)/(Mf-Md);
+        F = -8.3474*x^(5)+24.543*x^(4)-24.946*x^(3)+8.6321*x^(2)+1.1195*x;
+        
+        % Transonic drag rise for given Mach Number (Eq1.8, p14)
+        if M >= Md && M <= Mf
+            DeltaCdt = DeltaCdmax*F;
+        else
+            DeltaCdt = 0;
+        end
+        
+        % ---------------------------------------------------------------------
+        % 9. Supersonic wave drag
+        % ---------------------------------------------------------------------
+
+        % Supersonic drag rise for given Mach Number (Eq1.9, p14)
+        if M >= Mf
+            DeltaCds = DeltaCdmax;
+        else
+            DeltaCds = 0;
+        end
+        
+        % ---------------------------------------------------------------------
+        % 10. Total drag coefficient
+        % ---------------------------------------------------------------------
+        
+        Value = Cdfbody + Kf*Cdffins + Cde + CdbMsup06 + DeltaCdt + DeltaCds;
     end
-    
-    % ---------------------------------------------------------------------
-    % 10. Total drag coefficient
-    % ---------------------------------------------------------------------
-    
-    dragCoefficient = bodyFrictionDragCoefficient + interferenceFactor * finsFrictionDragCoefficient + ...
-                    excrescenceDragIncrement + baseDragSupersonic + transonicWaveDragRise + supersonicWaveDragRise;
 end
+

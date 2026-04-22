@@ -1,31 +1,31 @@
-function simulatior3D = setParam(simulatior3D, Xid, X)
+function SimObj = setParam(SimObj, Xid, X)
 %SETPARAM sets the given parameters to the given values in the simulator object.
 %   INPUTS
-%       simulatior3D  Simulator object (only multilayerwindSimulator3D implemented)
+%       SimObj  Simulator object (only multilayerwindSimulator3D implemented)
 %       Xid     Names of the parameters
 %       X       Values of the parameters
 %   OUTPUT
-%       simulatior3D  Simulator object with the new values
+%       SimObj  Simulator object with the new values
 
 
 % multilayerwindSimulator3D list of parameters
 
-[rocketparamIDs, envparamIDs] = paramNames(simulatior3D);
+[rocketparamIDs, envparamIDs] = paramNames(SimObj);
 
 % Base wind layer values
-layerspeed = [simulatior3D.Environment.Vspeed(2) ...
-           simulatior3D.Environment.Vspeed(11) ...
-           simulatior3D.Environment.Vspeed(16) ...
-           simulatior3D.Environment.Vspeed(51) ...
-           simulatior3D.Environment.Vspeed(101) ...
-           simulatior3D.Environment.Vspeed(201)];
+layerspeed = [SimObj.Environment.Vspeed(2) ...
+           SimObj.Environment.Vspeed(11) ...
+           SimObj.Environment.Vspeed(16) ...
+           SimObj.Environment.Vspeed(51) ...
+           SimObj.Environment.Vspeed(101) ...
+           SimObj.Environment.Vspeed(201)];
 
-layerAzi = [simulatior3D.Environment.Vazy(2) ...
-           simulatior3D.Environment.Vazy(11) ...
-           simulatior3D.Environment.Vazy(16) ...
-           simulatior3D.Environment.Vazy(51) ...
-           simulatior3D.Environment.Vazy(101) ...
-           simulatior3D.Environment.Vazy(201)];
+layerAzi = [SimObj.Environment.Vazy(2) ...
+           SimObj.Environment.Vazy(11) ...
+           SimObj.Environment.Vazy(16) ...
+           SimObj.Environment.Vazy(51) ...
+           SimObj.Environment.Vazy(101) ...
+           SimObj.Environment.Vazy(201)];
 
 % Boolean for case by case treatment (efficiency)       
 isChanged_Vi = false;
@@ -48,7 +48,7 @@ if (nd_param ~= 0) && (nd_param ~= 2)
 end
 
 
-% Changing the parameters in simulatior3D
+% Changing the parameters in SimObj
 k = length(Xid);
 for i=1:k
     id = Xid(i);
@@ -64,10 +64,10 @@ for i=1:k
             z12 = X(i);
         case "z23"
             z13 = X(i);
-        case "railTime"
-            simulatior3D.Rocket.Thrust_Force(2) = X(i); 
-        case "flightTime"
-            simulatior3D.Rocket.Thrust_Force(3) = X(i); 
+        case "T1"
+            SimObj.Rocket.thrustForce(2) = X(i); 
+        case "T2"
+            SimObj.Rocket.thrustForce(3) = X(i); 
         case "Vi1"
             layerspeed(1) = X(i);
             isChanged_Vi = true;
@@ -104,9 +104,9 @@ for i=1:k
         case "ai6"
             layerAzi(6) = X(i);
             isChanged_ai = true;
-        case "Burn_Time"
-            simulatior3D.Rocket.Burn_Time = X(i);
-            simulatior3D.Rocket.Thrust_Time =  X(i) * Thrust_Time_NV;
+        case "burnTime"
+            SimObj.Rocket.burnTime = X(i);
+            simulatior3D.Rocket.thrustTime =  X(i) * Thrust_Time_NV;
         otherwise
             if ismember(id, rocketparamIDs)
                 simulatior3D.Rocket.(id) = X(i);
@@ -119,55 +119,55 @@ for i=1:k
 end
 
 if nz_param == 3
-    simulatior3D.Rocket.stagePositions = [0, z1, z1 + z12, z1 + z12 + z13];
+    SimObj.Rocket.stagePositions = [0, z1, z1 + z12, z1 + z12 + z13];
 end
 
 if nd_param == 2
-    simulatior3D.Rocket.stageDiameters = [0, dmin + dd, dmin + dd, dmin];
+    SimObj.Rocket.diameters = [0, dmin + dd, dmin + dd, dmin];
 end
 
 if isChanged_Vi
-    simulatior3D.Environment.Vspeed = interp1(layerheight_NV, layerspeed, interpheight, 'pchip', 'extrap');
+    SimObj.Environment.Vspeed = interp1(layerheight_NV, layerspeed, interpheight, 'pchip', 'extrap');
 end
 
 if isChanged_ai
-    simulatior3D.Environment.Vazy = interp1(layerheight_NV, layerAzi, interpheight, 'pchip', 'extrap');
-    simulatior3D.Environment.Vdirx= cosd(simulatior3D.Environment.Vazy);
-    simulatior3D.Environment.Vdiry= sind(simulatior3D.Environment.Vazy);
+    SimObj.Environment.Vazy = interp1(layerheight_NV, layerAzi, interpheight, 'pchip', 'extrap');
+    SimObj.Environment.Vdirx= cosd(SimObj.Environment.Vazy);
+    SimObj.Environment.Vdiry= sind(SimObj.Environment.Vazy);
 end
 
 % Changing the dependent parameters (see rocketReader.m part 4)
 
 % 4.1 Maximum body diameter
-simulatior3D.Rocket.maxDiameter = simulatior3D.Rocket.stageDiameters(find(simulatior3D.Rocket.stageDiameters == max(simulatior3D.Rocket.stageDiameters), 1, 'first'));
+SimObj.Rocket.dm = SimObj.Rocket.diameters(find(SimObj.Rocket.diameters == max(SimObj.Rocket.diameters), 1, 'first'));
 % 4.2 Fin cord
-simulatior3D.Rocket.meanFinChord = (simulatior3D.Rocket.finRootChord + simulatior3D.Rocket.finTipChord)/2; 
+SimObj.Rocket.fin_c = (SimObj.Rocket.fin_cr + SimObj.Rocket.fin_ct)/2; 
 % 4.3 Maximum cross-sectional body area
-simulatior3D.Rocket.maxCrossSectionArea = pi*simulatior3D.Rocket.maxDiameter^2/4; 
+SimObj.Rocket.Sm = pi*SimObj.Rocket.dm^2/4; 
 % 4.4 Exposed planform fin area
-simulatior3D.Rocket.exposedFinArea = (simulatior3D.Rocket.finRootChord + simulatior3D.Rocket.finTipChord )/2*simulatior3D.Rocket.finSpan; 
+SimObj.Rocket.fin_SE = (SimObj.Rocket.fin_cr + SimObj.Rocket.fin_ct )/2*SimObj.Rocket.fin_s; 
 % 4.5 Body diameter at middle of fin station (CAREFUL, assumption for the SA)
-simulatior3D.Rocket.finBodyDiameter = simulatior3D.Rocket.maxDiameter; 
+SimObj.Rocket.fin_df = SimObj.Rocket.dm; 
 % 4.6 Virtual fin planform area
-simulatior3D.Rocket.virtualFinArea = simulatior3D.Rocket.exposedFinArea + 1/2*simulatior3D.Rocket.finBodyDiameter*simulatior3D.Rocket.finRootChord; 
+SimObj.Rocket.fin_SF = SimObj.Rocket.fin_SE + 1/2*SimObj.Rocket.fin_df*SimObj.Rocket.fin_cr; 
 % 4.8 Rocket Length
-simulatior3D.Rocket.totalLength = simulatior3D.Rocket.stagePositions(end);
+SimObj.Rocket.length = SimObj.Rocket.stagePositions(end);
 % Saturation Vapor Ration
-p_ws = exp(77.345+0.0057*simulatior3D.Environment.groundTemperature-7235/simulatior3D.Environment.groundTemperature)/simulatior3D.Environment.groundTemperature^8.2;
-p_a = simulatior3D.Environment.groundPressure;
-simulatior3D.Environment.Saturation_Vapor_Ratio = 0.62198*p_ws/(p_a-p_ws);
+p_ws = exp(77.345+0.0057*SimObj.Environment.Temperature_Ground-7235/SimObj.Environment.Temperature_Ground)/SimObj.Environment.Temperature_Ground^8.2;
+p_a = SimObj.Environment.Pressure_Ground;
+SimObj.Environment.Saturation_Vapor_Ratio = 0.62198*p_ws/(p_a-p_ws);
 % Casing masses
-simulatior3D.Rocket.casing_massP = simulatior3D.Rocket.motor_massP-simulatior3D.Rocket.propel_massP;
-simulatior3D.Rocket.casing_massF = simulatior3D.Rocket.motor_massF-simulatior3D.Rocket.propel_massF;
+SimObj.Rocket.casing_massP = SimObj.Rocket.motor_massP-SimObj.Rocket.massPropel;
+SimObj.Rocket.casing_massF = SimObj.Rocket.motor_massF-SimObj.Rocket.massFuel;
 %Global motor info
-simulatior3D.Rocket.motor_dia = max(simulatior3D.Rocket.motor_diaP, simulatior3D.Rocket.motor_diaF);
-simulatior3D.Rocket.motor_length = simulatior3D.Rocket.motor_lengthP + simulatior3D.Rocket.motor_lengthF + simulatior3D.Rocket.interMotorDistance ;
-simulatior3D.Rocket.propel_mass = simulatior3D.Rocket.propel_massP + simulatior3D.Rocket.propel_massF ;
-simulatior3D.Rocket.motor_mass = simulatior3D.Rocket.motor_massP + simulatior3D.Rocket.motor_massF; 
-simulatior3D.Rocket.casing_mass = simulatior3D.Rocket.casing_massP + simulatior3D.Rocket.casing_massF ;
-% mass variation coefficient
-A_T = trapz(simulatior3D.Rocket.Thrust_Time, simulatior3D.Rocket.Thrust_Force);
-simulatior3D.Rocket.Thrust2dMass_Ratio = simulatior3D.Rocket.propel_mass/(A_T);
+SimObj.Rocket.motor_dia = max(SimObj.Rocket.motor_diaP, SimObj.Rocket.motor_diaF);
+SimObj.Rocket.motorLength = SimObj.Rocket.motorLengthPropel + SimObj.Rocket.motorLengthFuel + SimObj.Rocket.distanceInterMotors ;
+SimObj.Rocket.propelMass = SimObj.Rocket.massPropel + SimObj.Rocket.massFuel ;
+SimObj.Rocket.motorMass = SimObj.Rocket.motor_massP + SimObj.Rocket.motor_massF; 
+SimObj.Rocket.casingMass = SimObj.Rocket.casing_massP + SimObj.Rocket.casing_massF ;
+% Mass variation coefficient
+A_T = trapz(SimObj.Rocket.thrustTime, SimObj.Rocket.thrustForce);
+SimObj.Rocket.thrust2dMassRatio = SimObj.Rocket.propelMass/(A_T);
 
 
 end

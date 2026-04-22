@@ -1,0 +1,30 @@
+numStages 4
+stageDiameters 0 0.12 0.12 0.09
+stagePositions 0 0.6 1.8 2.2
+coneMode off
+numFins 3
+finRootPosition 1.4
+finSpan 0.1
+finRootChord 0.18
+finTipChord 0.09
+finThickness 0.004
+finSweepDistance 0.025
+finLeadingEdgeLength 0.19
+finTrailingEdgeLength 0.17
+numLaunchLugs 1
+lugSurfaceArea 0.0003
+emptyMass 12.5
+emptyInertia 0.45
+emptyCenterOfMass 1.0
+airbrakePosition 1.6
+numAirbrakes 4
+airbrakeAngle 30
+motorId CustomMotor_2024.txt
+motorThrustFactor 0.9
+payloadMass 1.8
+mainParachuteDragArea 0.6
+drogueParachuteDragArea 0.25
+mainParachuteDeploymentAltitude 600
+centerOfPressureFactor 1.1
+normalForceCoefficientFactor 0.95
+dragCoefficientFactor 1.05

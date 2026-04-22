@@ -39,9 +39,9 @@ for i=1:k
         case "z23"
             XX(i,1) = simulatior3D.Rocket.("stagePositions")(4) - simulatior3D.Rocket.("stagePositions")(3); 
         case "railTime"
-            XX(i,1) = simulatior3D.Rocket.("Thrust_Force")(2); 
+            XX(i,1) = simulatior3D.Rocket.("thrustForce")(2); 
         case "flightTime"
-            XX(i,1) = simulatior3D.Rocket.("Thrust_Force")(3);
+            XX(i,1) = simulatior3D.Rocket.("thrustForce")(3);
         case "Vi1"
             XX(i,1) = simulatior3D.Environment.("Vspeed")(2);
         case "Vi2"

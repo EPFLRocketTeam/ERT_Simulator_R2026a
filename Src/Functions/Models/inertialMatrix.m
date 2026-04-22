@@ -1,18 +1,16 @@
-
-
 function I = inertialMatrix(rocket, Cm, t)
     if t < rocket.burnTime
-        % Find position of the centerOfMass of the propelant 
+        % Find position of the CM of the propelant 
         zPropel = rocket.tankZ + (1 - t / rocket.burnTime) * rocket.tankL;
 
         % Evaluate the mass of propelant
         propelantMass = rocket.propelMass * (1 - t / rocket.burnTime);
 
-        % Find the distance between rocket centerOfMass and propelant centerOfMass
+        % Find the distance between rocket CM and propelant CM
         deltaZ = zPropel - Cm;
     
         % Compute I of propelant
-        I = rocket.emptyInertia + ...
+        I = rocket.rocketInertia + ...
             inertialFillCylinder(propelantMass, zPropel, rocket.tankR);% + ...
             %huygensSteinerMatrix(propelantMass, 0, 0, deltaZ);
     else

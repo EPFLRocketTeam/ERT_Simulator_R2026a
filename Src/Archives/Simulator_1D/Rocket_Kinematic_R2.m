@@ -10,15 +10,15 @@ xdot = zeros(2,1);
 
 % Call Function:
 [M,dMdt] = massProperties(t,Rocket,'NonLinear');
-[~, a, ~, density, nu] = stdAtmos(x(1) + Environnement.startAltitude, Environnement);
-T = thrust(t,Rocket);
+[~, a, ~, rho, nu] = stdAtmos(x(1) + Environnement.Start_Altitude, Environnement);
+T = Thrust(t,Rocket);
 g = 9.80665; %[m/s2] Gravity
 CD = drag(Rocket,0,x(2),nu,a);
 CD_AB = AB_drag(Rocket,theta,0,x(2),nu);
 
 % Behaviour Equation:
 xdot(1) = x(2);
-xdot(2) = T/M-g-x(2)*dMdt/M-0.5*density*Rocket.maxCrossSectionArea*x(2).^2*(CD+CD_AB)/M;
+xdot(2) = T/M-g-x(2)*dMdt/M-0.5*rho*Rocket.Sm*x(2).^2*(CD+CD_AB)/M;
 
 end
 

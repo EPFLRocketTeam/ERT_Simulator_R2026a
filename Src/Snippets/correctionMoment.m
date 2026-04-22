@@ -5,7 +5,8 @@ function C1 = correctionMoment(t,Rocket,CNa,Xp,Velocity,Environnement,Altitude)
 %--------------------------------------------------------------------------
 % 1 Intrasic parameter
 %--------------------------------------------------------------------------
-[T, a, p, rho, Nu] = stdAtmos(Altitude,Environnement);
+
+[T, a, p, density, Nu] = stdAtmos(Altitude,Environnement);
 [M,dMdt,Cm,dCmdt,I_L,dI_Ldt,I_R,dI_Rdt] = massProperties(t,Rocket,'NonLinear');
 
 %--------------------------------------------------------------------------

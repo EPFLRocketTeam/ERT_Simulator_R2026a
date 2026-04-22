@@ -61,7 +61,7 @@ display(['Launch rail departure time : ' num2str(timeRail(end))]);
 %--------------------------------------------------------------------------
 
 [timeBurn, stateBurn, timeBurnEvents, stateBurnEvents, indexBurnEvents] = ...
-    simObj.FlightSim([timeRail(end) simObj.Rocket.Burn_Time(end)], stateRail(end, 2));
+    simObj.FlightSim([timeRail(end) simObj.Rocket.burnTime(end)], stateRail(end, 2));
 
 % simulatior3D.Rocket.coneMode = 'off';
 

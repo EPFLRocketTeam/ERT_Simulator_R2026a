@@ -26,7 +26,7 @@ simulatior3D = multilayerwindSimulator3D(Rocket, Environment, simulationOutputs)
 
 [railTime, railState] = simulatior3D.RailSim();
 
-[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.Burn_Time(end)], railState(end, 2));
+[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.burnTime(end)], railState(end, 2));
 
 [coastTime, coastState, coastTimeEvents, coastStateEvents, coastEventIndices] = simulatior3D.FlightSim([flightTime(end) 40], flightState(end, 1:3)', flightState(end, 4:6)', flightState(end, 7:10)', flightState(end, 11:13)');
 
@@ -60,10 +60,17 @@ figure('Name','Simulator Outputs');
 
 subplot(1,2,1)
 hold on;
+<<<<<<< HEAD
+title 'Stability Margin'
+xline(T2(1), '-', {'End of Rail'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'green', 'LineWidth', 1.2, 'DisplayName', 'End of Rail');
+xline(SimObj.Rocket.burnTime,  '-', {'End of Propulsion'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'red', 'LineWidth', 1.2, 'DisplayName', 'End of Propulsion');
+xline(T2(end),  '-', {'Apogee'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'magenta', 'LineWidth', 1.2, 'DisplayName', 'Apogee');
+=======
 title 'Stability stabilityMargin'
 xline(flightTime(1), '-', {'End of Rail'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'green', 'lineWidth', 1.2, 'DisplayName', 'End of Rail');
-xline(simulatior3D.Rocket.Burn_Time,  '-', {'End of Propulsion'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'red', 'lineWidth', 1.2, 'DisplayName', 'End of Propulsion');
+xline(simulatior3D.Rocket.burnTime,  '-', {'End of Propulsion'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'red', 'lineWidth', 1.2, 'DisplayName', 'End of Propulsion');
 xline(flightTime(end),  '-', {'Apogee'}, 'LabelVerticalAlignment', 'middle', 'LabelHorizontalAlignment', 'center', 'Color', 'magenta', 'lineWidth', 1.2, 'DisplayName', 'Apogee');
+>>>>>>> 8b6ece1c1c992ed5647f16054d68fd8a78b3021c
 legend show;
 
 yyaxis left

@@ -33,7 +33,7 @@ simObj = Simulator3D(rocket, environment, simOutputs);
 % -------------------------------------------------------------------------
 % 6DOF Flight Simulation
 %--------------------------------------------------------------------------
-[t2_1Nom, s2_1Nom, ~, ~, ~] = simObj.FlightSim([t1Nom(end) simObj.Rocket.Burn_Time(end)], s1Nom(end, 2));
+[t2_1Nom, s2_1Nom, ~, ~, ~] = simObj.FlightSim([t1Nom(end) simObj.Rocket.burnTime(end)], s1Nom(end, 2));
 [t2_2Nom, s2_2Nom, ~, ~, ~] = simObj.FlightSim([t2_1Nom(end) 40], s2_1Nom(end, 1:3)', s2_1Nom(end, 4:6)', s2_1Nom(end, 7:10)', s2_1Nom(end, 11:13)');
 t2Nom = [t2_1Nom; t2_2Nom(2:end)];
 s2Nom = [s2_1Nom; s2_2Nom(2:end, :)];
@@ -210,7 +210,7 @@ simObjWcRail = Simulator3D(rocketWcRail, environment, simOutputs);
 % -------------------------------------------------------------------------
 % 6DOF Flight Simulation
 %--------------------------------------------------------------------------
-[t2_1WcRail, s2_1WcRail, ~, ~, ~] = simObjWcRail.FlightSim([t1WcRail(end) simObjWcRail.Rocket.Burn_Time(end)], vWcRail);
+[t2_1WcRail, s2_1WcRail, ~, ~, ~] = simObjWcRail.FlightSim([t1WcRail(end) simObjWcRail.Rocket.burnTime(end)], vWcRail);
 [t2_2WcRail, s2_2WcRail, ~, ~, ~] = simObjWcRail.FlightSim([t2_1WcRail(end) 40], s2_1WcRail(end, 1:3)', s2_1WcRail(end, 4:6)', s2_1WcRail(end, 7:10)', s2_1WcRail(end, 11:13)');
 t2WcRail = [t2_1WcRail; t2_2WcRail(2:end)];
 s2WcRail = [s2_1WcRail; s2_2WcRail(2:end, :)];

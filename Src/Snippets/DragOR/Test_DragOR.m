@@ -18,16 +18,16 @@ simulatior3D = Simulator3D(Rocket, Environment, Drag, interp_type, simulationOut
 
 %%
 
-dragOR = readtable(Drag,'Format','%s%s%s%s');
+dragOpenRocket = readtable(Drag,'Format','%s%s%s%s');
 
-Index_start = find(contains(dragOR{:,1},'# Event LIFTOFF'));
-Index_end = find(contains(dragOR{:,1},'# Event APOGEE'));
+Index_start = find(contains(dragOpenRocket{:,1},'# Event LIFTOFF'));
+Index_end = find(contains(dragOpenRocket{:,1},'# Event APOGEE'));
 
-dragOR = dragOR{Index_start:Index_end,:};
+dragOpenRocket = dragOpenRocket{Index_start:Index_end,:};
 
-removeIndex = find(contains(dragOR(:,1),"Event"));
-dragOR(removeIndex,:) = [];
-dragOR = str2double(dragOR);
+removeIndex = find(contains(dragOpenRocket(:,1),"Event"));
+dragOpenRocket(removeIndex,:) = [];
+dragOpenRocket = str2double(dragOpenRocket);
 
 
 %% 

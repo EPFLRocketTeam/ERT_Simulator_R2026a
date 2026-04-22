@@ -5,14 +5,16 @@ function C2 = dampingMoment(t,Rocket,Calpha,CP,Velocity,Environnement,Altitude)
 %--------------------------------------------------------------------------
 % 1 Intrasic parameter
 %--------------------------------------------------------------------------
-[T, a, p, rho, Nu] = stdAtmos(Altitude,Environnement);
+
+[T, a, p, density, Nu] = stdAtmos(Altitude,Environnement);
 [M,dMdt,Cm,dCmdt,I_L,dI_Ldt,I_R,dI_Rdt] = massProperties(t,Rocket,'NonLinear');
 
 %--------------------------------------------------------------------------
 % 2 Subparameter
 %--------------------------------------------------------------------------
-%2.1 thrust damping coefficient 
-CR2 = dMdt*(Rocket.totalLength-Cm).^2;
+
+%2.1 Thrust damping coefficient 
+CR2 = dMdt*(Rocket.length-Cm).^2;
 
 %2.2 Aerodynamic damping coefficient
 CNa_Total = sum(Calpha.*(CP-Cm).^2);

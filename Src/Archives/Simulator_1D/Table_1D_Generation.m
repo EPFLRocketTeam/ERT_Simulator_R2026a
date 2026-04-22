@@ -19,7 +19,7 @@ theta = linspace(-190.5,1.165,10);
 % thrust Phase Simulation
 x_0 = [0;0];
 
-tspan = [0 Rocket.Burn_Time];
+tspan = [0 Rocket.burnTime];
 Amplifier = 1;
 [T,X] = ode45(@(t,x) Rocket_Kinematic(t,x,Rocket,Environnement,theta(1),Amplifier),tspan,x_0);
 figure(1);
@@ -48,7 +48,7 @@ Alt = linspace(1000,3048,100);
 
 % Simulation
 x_0 = [3048;0]; % Final condition wanted
-tspan = [35 Rocket.Burn_Time]; % Avoid motor thrust phase
+tspan = [35 Rocket.burnTime]; % Avoid motor thrust phase
 Data = []; % [Altitude, Speed, Angle of AB]
 Option = odeset('Events', @myEvent);
 for i = theta

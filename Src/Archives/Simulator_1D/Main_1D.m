@@ -60,7 +60,7 @@ display(['Max g @t = ' num2str(T(index))]);
 %--------------------------------------------------------------------------
 % Visualization
 %--------------------------------------------------------------------------
-pos=find(T>Rocket.Burn_Time);
+pos=find(T>Rocket.burnTime);
 figure(1);
 plot(T,X(:,1));hold on;grid on;
 %plot(T(pos(1)),X(pos(1),1),'r*');

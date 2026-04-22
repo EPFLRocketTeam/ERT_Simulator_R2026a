@@ -25,7 +25,7 @@ display(['Launch rail departure velocity : ' num2str(railState(end,2))]);
 %% ------------------------------------------------------------------------
 % 6DOF Boost Simulation
 %--------------------------------------------------------------------------
-[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.Thrust_Time(end)], railState(end,2));
+[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.thrustTime(end)], railState(end,2));
 
 %% ------------------------------------------------------------------------
 % 6DOF Boost Simulation
@@ -121,25 +121,25 @@ figure; hold on;
 subplot(3,2,1);
 plot(flightTime, simulatior3D.simAuxResults.stabilityMargin)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title 'stabilityMargin';
 % Plot centerOfPressure
 subplot(3,2,2);
 plot(flightTime, simulatior3D.simAuxResults.centerOfPressure)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title 'X_{cp}';
 % Plot AoA vs. time
 subplot(3,2,3);
 plot(flightTime, simulatior3D.simAuxResults.Alpha)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title '\alpha';
 % Plot normalForceCoefficientSlope vs. time
 subplot(3,2,4);
 plot(flightTime, simulatior3D.simAuxResults.Cn_alpha)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title 'Cn_{\alpha}';
 % Plot dragCoefficient vs. time
 subplot(3,2,5);
@@ -148,7 +148,7 @@ ylim([0, 1.5]);
 tmpYlim = ylim;
 set(gca, 'YTick', tmpYlim(1):0.1:tmpYlim(2));
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title 'dragCoefficient'
 screensize = get( groot, 'Screensize' );
 set(gcf,'Position',[screensize(1:2), screensize(3)*0.5,screensize(4)]);
@@ -159,12 +159,12 @@ figure; hold on;
 subplot(2,2,1);
 plot(flightTime, simulatior3D.simAuxResults.mass)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 tmpYlim = ylim;
 title 'mass';
 set(gca, 'YTick', tmpYlim(1):0.5:tmpYlim(2));
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 % Plot centerOfMass vs. time
 subplot(2,2,2);
 plot(flightTime, simulatior3D.simAuxResults.centerOfMass)
@@ -172,7 +172,7 @@ tmpYlim = ylim;
 title 'centerOfMass';
 set(gca, 'YTick', tmpYlim(1):0.01:tmpYlim(2));
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 % Plot inertiaLong vs. time
 subplot(2,2,3);
 plot(flightTime, simulatior3D.simAuxResults.inertiaLong)
@@ -180,13 +180,13 @@ tmpYlim = ylim;
 title 'inertiaLong';
 set(gca, 'YTick', tmpYlim(1):0.1:tmpYlim(2));
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 %Plot inertiaRot vs. time
 subplot(2,2,4);
 plot(flightTime, simulatior3D.simAuxResults.inertiaRot)
 title 'inertiaRot';
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 screensize = get( groot, 'Screensize' );
 set(gcf,'Position',[screensize(3)*0.5, screensize(2),...
     screensize(3)*0.5,screensize(3)*0.5]);            

@@ -10,50 +10,50 @@ addpath(genpath('../Declarations'),...
 % Rocket Definition
 Rocket = rocketReader('WASSERFALLEN_FRANKENSTEIN.txt');
 Environment = environnementReader('Environment/Environnement_Definition_Wasserfallen.txt');
-simulationOutputs = SimOutputReader('Simulation/Simulation_outputs.txt');
+SimOutputs = SimOutputReader('Simulation/Simulation_outputs.txt');
 
-simulatior3D = Simulator3D(Rocket, Environment, simulationOutputs);
+SimObj = Simulator3D(Rocket, Environment, SimOutputs);
 
 %% ------------------------------------------------------------------------
 % 6DOF Rail Simulation
 %--------------------------------------------------------------------------
 
-[railTime, railState] = simulatior3D.RailSim();
+[T1, S1] = SimObj.RailSim();
 
-display(['Launch rail departure velocity : ' num2str(railState(end,2))]);
+display(['Launch rail departure velocity : ' num2str(S1(end,2))]);
 
 %% ------------------------------------------------------------------------
 % 6DOF Flight Simulation
 %--------------------------------------------------------------------------
 
-[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulatior3D.FlightSim([railTime(end) simulatior3D.Rocket.Burn_Time(end)], railState(end, 2));
+[T2_1, S2_1, T2_1E, S2_1E, I2_1E] = SimObj.FlightSim([T1(end) SimObj.Rocket.burnTime(end)], S1(end, 2));
 
-%simulatior3D.Rocket.coneMode = 'off';
+%SimObj.Rocket.cone_mode = 'off';
 
-[coastTime, coastState, coastTimeEvents, coastStateEvents, coastEventIndices] = simulatior3D.FlightSim([flightTime(end) 40], flightState(end, 1:3)', flightState(end, 4:6)', flightState(end, 7:10)', flightState(end, 11:13)');
+[T2_2, S2_2, T2_2E, S2_2E, I2_2E] = SimObj.FlightSim([T2_1(end) 40], S2_1(end, 1:3)', S2_1(end, 4:6)', S2_1(end, 7:10)', S2_1(end, 11:13)');
 
-flightTime = [flightTime; coastTime(2:end)];
-flightState = [flightState; coastState(2:end, :)];
-display(['Apogee AGL : ' num2str(flightState(end,3))]);
-display(['Max speed : ' num2str(max(flightState(:,6)))]);
-display(['Max acceleration : ' num2str(max(diff(flightState(:,6))./diff(flightTime)))]);
+T2 = [T2_1; T2_2(2:end)];
+S2 = [S2_1; S2_2(2:end, :)];
+display(['Apogee AGL : ' num2str(S2(end,3))]);
+display(['Max speed : ' num2str(max(S2(:,6)))]);
+display(['Max acceleration : ' num2str(max(diff(S2(:,6))./diff(T2)))]);
 %% ------------------------------------------------------------------------
 % 3DOF Recovery Drogue
 %--------------------------------------------------------------------------
 
-[drogueTime, drogueState, drogueTimeEvents, drogueStateEvents, drogueEventIndices] = simulatior3D.DrogueParaSim(flightTime(end), flightState(end,1:3)', flightState(end, 4:6)');
+[T3, S3, T3E, S3E, I3E] = SimObj.DrogueParaSim(T2(end), S2(end,1:3)', S2(end, 4:6)');
 
 %% ------------------------------------------------------------------------
 % 3DOF Recovery Main
 %--------------------------------------------------------------------------
 
-[mainChuteTime, mainChuteState, mainChuteTimeEvents, S4E, mainChuteEventsIndices] = simulatior3D.MainParaSim(drogueTime(end), drogueState(end,1:3)', drogueState(end, 4:6)');
+[T4, S4, T4E, S4E, I4E] = SimObj.MainParaSim(T3(end), S3(end,1:3)', S3(end, 4:6)');
 
 %% ------------------------------------------------------------------------
 % 3DOF Crash Simulation
 %--------------------------------------------------------------------------
 
-[crashTime, crashState, crashTimeEvents, crashStateEvents, crashEventIndices] = simulatior3D.CrashSim(flightTime(end), flightState(end,1:3)', flightState(end, 4:6)');
+[T5, S5, T5E, S5E, I5E] = SimObj.CrashSim(T2(end), S2(end,1:3)', S2(end, 4:6)');
 
 %% ------------------------------------------------------------------------
 % Analyse results
@@ -61,7 +61,7 @@ display(['Max acceleration : ' num2str(max(diff(flightState(:,6))./diff(flightTi
 
 % PLOT 1 : 3D rocket trajectory
 
-C = quat2rotmat(flightState(:, 7:10));
+C = quat2rotmat(S2(:, 7:10));
 angle = rot2anglemat(C);
 
 % plot rocket orientation
@@ -70,15 +70,15 @@ direcv = zeros(length(C),3);
 for i  = 1:length(C)
     direcv(i,:) = C(:,:,i)*[0;0;1];
 end
-%quiver3(flightState(:,1), flightState(:,2), flightState(:,3), direcv(:,1), direcv(:,2), direcv(:,3));
+%quiver3(S2(:,1), S2(:,2), S2(:,3), direcv(:,1), direcv(:,2), direcv(:,3));
 
-% plot trajectory of centerOfMass
-plot3(flightState(:,1), flightState(:,2), flightState(:,3), 'DisplayName', 'Ascent');
-plot3(drogueState(:,1), drogueState(:,2), drogueState(:,3), 'DisplayName', 'Drogue Descent');
-plot3(mainChuteState(:,1), mainChuteState(:,2), mainChuteState(:,3), 'DisplayName', 'Main Descent');
-plot3(crashState(:,1), crashState(:,2), crashState(:,3), 'DisplayName', 'Ballistic Descent')
+% plot trajectory of CM
+plot3(S2(:,1), S2(:,2), S2(:,3), 'DisplayName', 'Ascent');
+plot3(S3(:,1), S3(:,2), S3(:,3), 'DisplayName', 'Drogue Descent');
+plot3(S4(:,1), S4(:,2), S4(:,3), 'DisplayName', 'Main Descent');
+plot3(S5(:,1), S5(:,2), S5(:,3), 'DisplayName', 'Ballistic Descent')
 daspect([1 1 1]); pbaspect([1, 1, 1]); view(45, 45);
-[XX, YY, M, Mcolor] = get_google_map(Environment.startLatitude, Environment.startLongitude, 'Height', ceil(diff(xlim)/3.4), 'Width', ceil(diff(ylim)/3.4));
+[XX, YY, M, Mcolor] = get_google_map(Environment.Start_Latitude, Environment.Start_Longitude, 'Height', ceil(diff(xlim)/3.4), 'Width', ceil(diff(ylim)/3.4));
 xImage = [xlim',xlim'];
 yImage = [ylim;ylim];
 zImage = zeros(2);
@@ -90,113 +90,113 @@ legend show;
 
 % PLOT 2 : time dependent altitude
 figure; hold on;
-plot(flightTime, flightState(:,3));
-plot(drogueTime, drogueState(:,3));
-plot(mainChuteTime, mainChuteState(:,3));
-plot(crashTime, crashState(:,3));
+plot(T2, S2(:,3));
+plot(T3, S3(:,3));
+plot(T4, S4(:,3));
+plot(T5, S5(:,3));
 title 'Altitude vs. time'
 xlabel 't [s]'; ylabel 'Altitude [m]';
 
 % PLOT 3 : Altitude vs. drift
 figure; hold on;
-plot(sqrt(flightState(:,1).^2 + flightState(:,2).^2), flightState(:,3));
-%quiver(sqrt(flightState(:,1).^2 + flightState(:,2).^2), flightState(:,3), sqrt(direcv(:,1).^2 + direcv(:,2).^2), direcv(:,3));
-plot(sqrt(drogueState(:,1).^2 + drogueState(:,2).^2), drogueState(:,3));
-plot(sqrt(mainChuteState(:,1).^2 + mainChuteState(:,2).^2), mainChuteState(:,3));
-plot(sqrt(crashState(:,1).^2 + crashState(:,2).^2), crashState(:,3));
+plot(sqrt(S2(:,1).^2 + S2(:,2).^2), S2(:,3));
+%quiver(sqrt(S2(:,1).^2 + S2(:,2).^2), S2(:,3), sqrt(direcv(:,1).^2 + direcv(:,2).^2), direcv(:,3));
+plot(sqrt(S3(:,1).^2 + S3(:,2).^2), S3(:,3));
+plot(sqrt(S4(:,1).^2 + S4(:,2).^2), S4(:,3));
+plot(sqrt(S5(:,1).^2 + S5(:,2).^2), S5(:,3));
 title 'Altitude vs. drift'
 xlabel 'Drift [m]'; ylabel 'Altitude [m]';
 daspect([1 1 1]);
 
 % PLOT 4 : Aerodynamic properties
 figure; hold on;
-% Plot stabilityMargin
+% Plot Margin
 subplot(3,2,1);
-plot(flightTime, simulatior3D.simAuxResults.stabilityMargin)
+plot(T2, SimObj.SimAuxResults.Margin)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
-title 'stabilityMargin';
-% Plot centerOfPressure
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
+title 'Margin';
+% Plot Xcp
 subplot(3,2,2);
-plot(flightTime, simulatior3D.simAuxResults.centerOfPressure)
+plot(T2, SimObj.SimAuxResults.Xcp)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title 'X_{cp}';
 % Plot AoA vs. time
 subplot(3,2,3);
-plot(flightTime, simulatior3D.simAuxResults.angleOfAttack)
+plot(T2, SimObj.SimAuxResults.Alpha)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title '\alpha';
-% Plot normalForceCoefficientSlope vs. time
+% Plot CNa vs. time
 subplot(3,2,4);
-plot(flightTime, simulatior3D.simAuxResults.normalForceCoefficientSlope)
+plot(T2, SimObj.SimAuxResults.Cn_alpha)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title 'Cn_{\alpha}';
-% Plot dragCoefficient vs. time
+% Plot Cd vs. time
 subplot(3,2,5);
-plot(flightTime, simulatior3D.simAuxResults.dragCoefficient)
+plot(T2, SimObj.SimAuxResults.Cd)
 ylim([0, 1.5]);
 tmpYlim = ylim;
 set(gca, 'YTick', tmpYlim(1):0.1:tmpYlim(2));
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
-title 'dragCoefficient'
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
+title 'Cd'
 screensize = get( groot, 'Screensize' );
 set(gcf,'Position',[screensize(1:2), screensize(3)*0.5,screensize(4)]);
 
-% PLOT 5 : mass properties
+% PLOT 5 : Mass properties
 figure; hold on;
 % Plot mass vs. time
 subplot(2,2,1);
-plot(flightTime, simulatior3D.simAuxResults.mass)
+plot(T2, SimObj.SimAuxResults.Mass)
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 tmpYlim = ylim;
-title 'mass';
+title 'Mass';
 set(gca, 'YTick', tmpYlim(1):0.5:tmpYlim(2));
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
-% Plot centerOfMass vs. time
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
+% Plot CM vs. time
 subplot(2,2,2);
-plot(flightTime, simulatior3D.simAuxResults.centerOfMass)
+plot(T2, SimObj.SimAuxResults.CM)
 tmpYlim = ylim;
-title 'centerOfMass';
+title 'CM';
 set(gca, 'YTick', tmpYlim(1):0.01:tmpYlim(2));
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
-% Plot inertiaLong vs. time
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
+% Plot Il vs. time
 subplot(2,2,3);
-plot(flightTime, simulatior3D.simAuxResults.inertiaLong)
+plot(T2, SimObj.SimAuxResults.Il)
 tmpYlim = ylim;
-title 'inertiaLong';
+title 'Il';
 set(gca, 'YTick', tmpYlim(1):0.1:tmpYlim(2));
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
-%Plot inertiaRot vs. time
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
+%Plot Ir vs. time
 subplot(2,2,4);
-plot(flightTime, simulatior3D.simAuxResults.inertiaRot)
-title 'inertiaRot';
+plot(T2, SimObj.SimAuxResults.Ir)
+title 'Ir';
 hold on;
-plot(ones(1,2)*Rocket.Burn_Time, ylim, 'g');
+plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 screensize = get( groot, 'Screensize' );
 set(gcf,'Position',[screensize(3)*0.5, screensize(2),...
     screensize(3)*0.5,screensize(3)*0.5]);            
 
-% PLOT 6 : stabilityMargin plot
+% PLOT 6 : Margin plot
 figure; hold on;
 title 'Stability margin'
 yyaxis left;
-plot(flightTime, simulatior3D.simAuxResults.centerOfMass, 'DisplayName', 'X_{centerOfMass}');
-plot(flightTime, simulatior3D.simAuxResults.centerOfPressure, 'DisplayName', 'X_{CP}');
-ylabel 'X_{centerOfMass}, X_{CP} [cm]'
+plot(T2, SimObj.SimAuxResults.CM, 'DisplayName', 'X_{CM}');
+plot(T2, SimObj.SimAuxResults.Xcp, 'DisplayName', 'X_{CP}');
+ylabel 'X_{CM}, X_{CP} [cm]'
 yyaxis right;
-plot(flightTime, simulatior3D.simAuxResults.stabilityMargin, 'DisplayName', 'stabilityMargin');
-ylabel 'stabilityMargin [calibers]';
-title 'Dynamic Stability stabilityMargin'
+plot(T2, SimObj.SimAuxResults.Margin, 'DisplayName', 'Margin');
+ylabel 'Margin [calibers]';
+title 'Dynamic Stability Margin'
 legend show;
 
 % plot 7 : norm of quaternion
 figure;
-plot(flightTime, sqrt(sum(flightState(:, 7:10).^2, 2)));
+plot(T2, sqrt(sum(S2(:, 7:10).^2, 2)));

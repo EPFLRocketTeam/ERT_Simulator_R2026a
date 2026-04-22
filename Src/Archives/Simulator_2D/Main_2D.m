@@ -16,7 +16,7 @@ Environnement = environnementReader('Environment/Environnement_Definition_USA.tx
 %--------------------------------------------------------------------------
 % Initial Conditions
 x_0 = [0;0]; % At rest position
-tspan = [0 Rocket.Burn_Time];
+tspan = [0 Rocket.burnTime];
 
 % Simulation
 Option = odeset('Events', @myEventRail);
@@ -37,7 +37,7 @@ Option = odeset('Events', @myEventApogee);
 [T,X] = ode45(@(t,x) Rocket_Kinematic_2D(t,x,Rocket,Environnement,-190.5),tspan,x_0,Option);
 
 % Visualization
-pos = find(T<Rocket.Burn_Time);
+pos = find(T<Rocket.burnTime);
 figure(1);
 plot(X(:,1),X(:,3),'DisplayName',['V_{\infty} = ' num2str(Environnement.V_inf) 'm/s']);grid on;hold on;
 plot(X(pos(end),1),X(pos(end),3),'r*');
@@ -74,7 +74,7 @@ xlabel('Position Horizontale [m]');ylabel('Position Verticale [m]');
 % [T,X] = ode45(@(t,x) Free_Fall_Kinematic(t,x,Rocket,Environnement,-190.5),tspan,x_0,Option);
 % 
 % % Visualization
-% pos = find(T<Rocket.Burn_Time);
+% pos = find(T<Rocket.burnTime);
 % figure(1);
 % plot(X(:,1),-X(:,3),'DisplayName','Free Fall');
 % 

@@ -223,11 +223,11 @@ classdef Simulator3D_CAN_COM < handle
 
             % Drag
             % Drag coefficient
-            CD = drag(obj.Rocket, alpha, Vmag, nu, a)*obj.Rocket.dragCoefficientFactor; 
-            %obj.Rocket.airbrakeAngle
-            %obj.Rocket.numAirbrakes
-            if(t>obj.Rocket.Burn_Time)
-              CD = CD + drag_shuriken(obj.Rocket, obj.Rocket.airbrakeAngle, alpha, Vmag, nu); 
+            CD = drag(obj.Rocket, alpha, Vmag, nu, a)*obj.Rocket.CD_fac; 
+            %obj.Rocket.ab_phi
+            %obj.Rocket.ab_n
+            if(t>obj.Rocket.burnTime)
+              CD = CD + drag_shuriken(obj.Rocket, obj.Rocket.ab_phi, alpha, Vmag, nu); 
             end
             % Drag force
             D = -0.5*density*obj.Rocket.maxCrossSectionArea*CD*Vmag^2*Vnorm; 
@@ -519,9 +519,9 @@ classdef Simulator3D_CAN_COM < handle
 
             % Drag
             % Drag coefficient
-            CD = noseDrag(obj.Rocket, alpha, Vmag, nu, a)*obj.Rocket.dragCoefficientFactor; 
-            if(t>obj.Rocket.Burn_Time)
-              CD = CD + drag_shuriken(obj.Rocket, obj.Rocket.airbrakeAngle, alpha, Vmag, nu); 
+            CD = Nose_drag(obj.Rocket, alpha, Vmag, nu, a)*obj.Rocket.CD_fac; 
+            if(t>obj.Rocket.burnTime)
+              CD = CD + drag_shuriken(obj.Rocket, obj.Rocket.ab_phi, alpha, Vmag, nu); 
             end
             % Drag force
             D = -0.5*density*obj.Rocket.maxCrossSectionArea*CD*Vmag^2*Vnorm;
