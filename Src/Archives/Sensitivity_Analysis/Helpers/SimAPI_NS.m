@@ -26,7 +26,7 @@ for idx_sim = 1:N
     [T1, S1] = SimObj.RailSim();
     t_R = toc(t_R0);
     
-    % Thrust phase
+    % thrust phase
     t_A10 = tic;
     [T2_1, S2_1, ~, ~, ~] = SimObj.FlightSim([T1(end) SimObj.Rocket.burnTime(end)], S1(end, 2));
     t_A1 = toc(t_A10);

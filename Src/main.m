@@ -1,12 +1,19 @@
 %% Rocket Simulator 3D
 
 % Initialize
+<<<<<<< HEAD:Src/Main.m
 close all; clear all; clc;
+=======
+close all; 
+clear all; 
+clc;
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 addpath(genpath('./Declarations'),...
         genpath('./Functions'),...
         genpath('./Snippets'),...
         genpath('./Simulator_3D'));
 % Rocket Definition
+<<<<<<< HEAD:Src/Main.m
 Rocket = rocketReader('Nordend_EUROC.txt');
 
 
@@ -15,6 +22,12 @@ Environment = environnementReader('Environment/Environnement_Definition_EuRoC.tx
 SimOutputs = SimOutputReader('Simulation/Simulation_outputs.txt');
 
 SimObj = Simulator3D(Rocket, Environment, SimOutputs);
+=======
+rocket = rocketReader('Nordend_EUROC.txt');
+environment = environnementReader('Environment/Environnement_Definition_EuRoC.txt');
+simulationOutputs = simOutputReader('Simulation/Simulation_outputs.txt');
+simulator3D = Simulator3D(rocket, environment, simulationOutputs);
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 
 %% ------------------------------------------------------------------------
 % 6DOF Rail Simulation
@@ -32,7 +45,11 @@ display(['Launch rail departure time : ' num2str(T1(end))]);
 % 6DOF Flight Simulation
 %--------------------------------------------------------------------------
 
+<<<<<<< HEAD:Src/Main.m
 [T2_1, S2_1, T2_1E, S2_1E, I2_1E] = SimObj.FlightSim([T1(end) SimObj.Rocket.burnTime(end)], S1(end, 2));
+=======
+[flightTime, flightState, flightTimeEvents, flightStateEvents, flightEventIndices] = simulator3D.FlightSim([railTime(end) simulator3D.rocket.burnTime(end)], railState(end, 2));
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 
 %SimObj.Rocket.cone_mode = 'off';
 
@@ -70,6 +87,13 @@ display(['Max g @t = ' num2str(T_1_2(index))]);
 
 
 
+<<<<<<< HEAD:Src/Main.m
+=======
+dragCoefficientAb = dragShuriken(rocket, 0, simulator3D.simAuxResults.flightPathAngle(maxSpeedIndex), maxSpeed, kinematicViscosity);
+dragForceAb = 0.5 * dragCoefficientAb * density * pi * rocket.maxDiameter^2 / 4 * maxSpeed^2;
+display(['AB drag force at max speed = ' num2str(dragForceAb)]);
+display(['Max Mach number : ' num2str(maxSpeed / speedOfSound)]);
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 
 
 % Motor shutdown
@@ -139,7 +163,13 @@ end
 % plot(T4,abs(S4(:,6)));
 % legend show;
 
+<<<<<<< HEAD:Src/Main.m
 % PLOT 1 : 3D rocket trajectory
+=======
+% Convert quaternions to rotation matrices
+rotationMatrices = quatToRotMat(flightState(:, 7:10));
+eulerAngles = rotToAngleMat(rotationMatrices);
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 
 C = quat2rotmat(S2(:, 7:10));
 angle = rot2anglemat(C);
@@ -158,6 +188,7 @@ plot3(S3(:,1), S3(:,2), S3(:,3), 'DisplayName', 'Drogue Descent','LineWidth',2);
 plot3(S4(:,1), S4(:,2), S4(:,3), 'DisplayName', 'Main Descent','LineWidth',2);
 plot3(S5(:,1), S5(:,2), S5(:,3), 'DisplayName', 'Ballistic Descent','LineWidth',2)
 daspect([1 1 1]); pbaspect([1, 1, 1]); view(45, 45);
+<<<<<<< HEAD:Src/Main.m
 %[XX, YY, M, Mcolor] = get_google_map(Environment.Start_Latitude, Environment.Start_Longitude, 'Height', ceil(diff(xlim)/3.4), 'Width', ceil(diff(ylim)/3.4));
 xlim([min([S2(:,1); S3(:,1); S4(:,1); S5(:,1)]) max([S2(:,1); S3(:,1); S4(:,1); S5(:,1)])]);
 ylim([min([S2(:,2); S3(:,2); S4(:,2); S5(:,2)]) max([S2(:,2); S3(:,2); S4(:,2); S5(:,2)])]);
@@ -165,6 +196,15 @@ zlim([0 max([S2(:,3); S3(:,3); S4(:,3); S5(:,3)])]);
 % xImage = [xlim',xlim'];
 % yImage = [ylim;ylim];
 % zImage = zeros(2);
+=======
+
+xLimits = [min([flightState(:,1); drogueState(:,1); mainChuteState(:,1); crashState(:,1)]) ...
+           max([flightState(:,1); drogueState(:,1); mainChuteState(:,1); crashState(:,1)])];
+yLimits = [min([flightState(:,2); drogueState(:,2); mainChuteState(:,2); crashState(:,2)]) ...
+           max([flightState(:,2); drogueState(:,2); mainChuteState(:,2); crashState(:,2)])];
+zLimits = [0 max([flightState(:,3); drogueState(:,3); mainChuteState(:,3); crashState(:,3)])];
+axis([xLimits yLimits zLimits])
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 colormap('jet');
 %surf(xImage, yImage, zImage, 'CData', M,'FaceColor', 'texturemap', 'EdgeColor', 'none', 'DisplayName', 'Base Map');
 surf(Environment.map_x, Environment.map_y, Environment.map_z, 'EdgeColor', 'none', 'DisplayName', 'Base Map');
@@ -206,6 +246,7 @@ legend show;
 figure('Name','Aerodynamic properties'); hold on;
 % Plot Margin
 subplot(3,2,1);
+<<<<<<< HEAD:Src/Main.m
 plot(T2, SimObj.SimAuxResults.Margin)
 grid on
 box on
@@ -219,23 +260,48 @@ hold on;
 grid on
 box on
 plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
+=======
+plot(flightTime, simulator3D.simAuxResults.stabilityMargin)
+grid on; box on; hold on;
+plot(ones(1,2) * rocket.burnTime, ylim, 'g');
+title 'stabilityMargin';
+
+% Plot centerOfPressure
+subplot(3,2,2);
+plot(flightTime, simulator3D.simAuxResults.centerOfPressure)
+hold on; grid on; box on;
+plot(ones(1,2) * rocket.burnTime, ylim, 'g');
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 title 'X_{cp}';
 % Plot AoA vs. time
 subplot(3,2,3);
+<<<<<<< HEAD:Src/Main.m
 plot(T2, SimObj.SimAuxResults.Alpha)
 hold on;
 grid on
 box on
+=======
+plot(flightTime, simulator3D.simAuxResults.angleOfAttack)
+hold on; grid on; box on;
+plot(ones(1,2) * rocket.burnTime, ylim, 'g');
+title '\alpha';
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 
 plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title '\alpha';
 % Plot CNa vs. speed
 subplot(3,2,4);
+<<<<<<< HEAD:Src/Main.m
 plot(T2, SimObj.SimAuxResults.Cn_alpha)
 hold on;
 grid on
 box on
 plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
+=======
+plot(flightTime, simulator3D.simAuxResults.normalForceCoefficientSlope)
+hold on; grid on; box on;
+plot(ones(1,2) * rocket.burnTime, ylim, 'g');
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 title 'Cn_{\alpha}';
 
 subplot(3,2,5);
@@ -250,6 +316,7 @@ title 'SCALED CD';
 subplot(3,2,6);
 plot(T2, SimObj.SimAuxResults.Delta)
 ylim([0, 1]);
+<<<<<<< HEAD:Src/Main.m
 tmpYlim = ylim;
 set(gca, 'YTick', tmpYlim(1):0.1:tmpYlim(2));
 grid on
@@ -259,6 +326,13 @@ plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 title 'Delta, angle with Oz'
 screensize = get( groot, 'Screensize' );
 set(gcf,'Position',[screensize(1:2), screensize(3)*0.5,screensize(4)]);
+=======
+currentYLim = ylim;
+set(gca, 'YTick', currentYLim(1):0.1:currentYLim(2));
+grid on; box on; hold on;
+plot(ones(1,2) * rocket.burnTime, ylim, 'g');
+title 'delta, angle with Oz'
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 
 
 % figure('Name',' CD against speed up'); hold on;
@@ -295,6 +369,7 @@ figure('Name','Mass properties'); hold on;
 subplot(2,2,1);
 plot(T2, SimObj.SimAuxResults.Mass)
 hold on;
+<<<<<<< HEAD:Src/Main.m
 plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 tmpYlim = ylim;
 title 'Mass';
@@ -304,6 +379,15 @@ box on
 hold on;
 plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 % Plot CM vs. time
+=======
+plot(ones(1,2) * rocket.burnTime, ylim, 'g');
+currentYLim = ylim;
+title 'mass';
+set(gca, 'YTick', currentYLim(1):0.5:currentYLim(2));
+grid on; box on;
+
+% Plot centerOfMass vs. time
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 subplot(2,2,2);
 plot(T2, SimObj.SimAuxResults.CM)
 tmpYlim = ylim;
@@ -312,8 +396,14 @@ set(gca, 'YTick', tmpYlim(1):0.03:tmpYlim(2));
 grid on
 box on
 hold on;
+<<<<<<< HEAD:Src/Main.m
 plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 % Plot Il vs. time
+=======
+plot(ones(1,2) * rocket.burnTime, ylim, 'g');
+
+% Plot inertiaLong vs. time
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 subplot(2,2,3);
 plot(T2, SimObj.SimAuxResults.Il)
 tmpYlim = ylim;
@@ -322,18 +412,29 @@ set(gca, 'YTick', tmpYlim(1):0.5:tmpYlim(2));
 grid on
 box on
 hold on;
+<<<<<<< HEAD:Src/Main.m
 plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 %Plot Ir vs. time
+=======
+plot(ones(1,2) * rocket.burnTime, ylim, 'g');
+
+% Plot inertiaRot vs. time
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 subplot(2,2,4);
 plot(T2, SimObj.SimAuxResults.Ir)
 title 'Ir';
 hold on;
+<<<<<<< HEAD:Src/Main.m
 plot(ones(1,2)*Rocket.burnTime, ylim, 'g');
 screensize = get( groot, 'Screensize' );
 grid on
 box on
 set(gcf,'Position',[screensize(3)*0.5, screensize(2),...
     screensize(3)*0.5,screensize(3)*0.5]);            
+=======
+plot(ones(1,2) * rocket.burnTime, ylim, 'g');
+grid on; box on;
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 
 % PLOT 6 : Margin plot
 figure('Name','Dynamic stability margin'); hold on;
@@ -387,8 +488,13 @@ legend("ax", "ay", "az", fontsize=15)
 
 % Plot 10
 figure(Name="Euler angles")
+<<<<<<< HEAD:Src/Main.m
 q = S2(:,7:10)';
 [phi, theta, psi] = quat_to_euler_angles(q(1,:), q(2,:), q(3,:), q(4,:));
+=======
+quaternionStates = flightState(:,7:10)';
+[phi, theta, psi] = quatToEulerAngles(quaternionStates(1,:), quaternionStates(2,:), quaternionStates(3,:), quaternionStates(4,:));
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef:Src/main.m
 hold on
 plot(T2, phi .* 180 ./ pi, LineWidth=2)
 plot(T2, theta .* 180 ./ pi, LineWidth=2)

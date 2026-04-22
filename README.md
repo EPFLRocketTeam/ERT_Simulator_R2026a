@@ -39,7 +39,7 @@ Here is a brief description of these subfolders.
 We present here a brief user guide for the utilization of the ERT-Sim.
 
 ### Litterature
-First and foremost, it is recommended to read the [project report](Litterature/Copie%20de%20Rapport%20Eric%20Simulation.pdf) for this Simulator, written by Eric Brunner & Maximilien Mingard, as well as the ERT [wiki](https://rocket-team.epfl.ch/). The report explains all the theory behind the flight simulation of a rocket and takes the reader through the steps in an understandable way, starting with the easier 1D model and ramping up gently to the full 3D simulation.
+First and foremost, it is recommended to read the ERT [wiki](https://rocket-team.epfl.ch/). The report explains all the theory behind the flight simulation of a rocket and takes the reader through the steps in an understandable way, starting with the easier 1D model and ramping up gently to the full 3D simulation.
 
 ### Standard procedure
 In order to run a 3D simulation, follow these steps:

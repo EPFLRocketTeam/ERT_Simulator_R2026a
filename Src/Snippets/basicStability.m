@@ -78,8 +78,13 @@ T_wind = [0.5 1 1.5]; % Wind rafal time [s]
 for t_wind = T_wind
  
 [Calpha, CP] = barrowmanLift(Rocket,0,Velocity/346,0); % No roll
+<<<<<<< HEAD
 [normalForceCoefficientSlope, Xp] = normalLift(Rocket,0,1.1,Velocity/346,0,0);
 C1 = correctionMoment(0,Rocket,normalForceCoefficientSlope,Xp,Velocity,Environnement,0);
+=======
+[CNa, Xp] = normalLift(Rocket,0,1.1,Velocity/346,0,0);
+C1 = correctionMoment(0,Rocket,CNa,Xp,Velocity,Environnement,0);
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef
 C2 = dampingMoment(0,Rocket,Calpha,CP,Velocity,Environnement,0);
 
 H = C1*atan(V_wind/Velocity)*t_wind

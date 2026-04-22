@@ -11,8 +11,13 @@ function Value = drag_transonic(Rocket, alpha, Uinf, nu, a)
     % - Drag Coefficient Prediction, Chapter 1 Preetam Sharma
     % Semester Project Report, Professor Flavio Noca, December 2021.
 
+<<<<<<< HEAD
         % -------------------------------------------------------------------------
     % 0.1 Change of units from m to ft and inches
+=======
+    %REMARK: drag is independent of alpha (subsitious) + lotta magic numbers
+
+>>>>>>> 84fc566240e475e77440c14f3f877aa2441952ef
     % -------------------------------------------------------------------------
     
 %     % velocities in ft

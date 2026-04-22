@@ -8,7 +8,7 @@ function CDM = pitchDampingMoment(Rocket, rho, Calpha, CP, dMdt, CM, w, V)
         CDM = 0;
     else
         % -------------------------------------------------------------------------
-        % Thrust damping
+        % thrust damping
         % -------------------------------------------------------------------------
 
         CDM_thrust = dMdt*(Rocket.length-CM).^2*w*2/V^2/rho/Rocket.Sm;
